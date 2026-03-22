@@ -5,7 +5,8 @@
   "main": "build.js",
   "scripts": {
     "build": "node build.js",
-    "serve": "npx serve public"
+    "serve": "npx serve public",
+    "deploy": "bash deploy.sh"
   },
   "keywords": ["blog", "markdown"],
   "author": "",
