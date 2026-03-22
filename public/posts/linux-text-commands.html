@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux文本处理命令详解 | TechBlog</title>
+    <meta name="description" content="详细介绍Linux中文本处理相关的命令，包括grep、sed、awk、cut、sort、uniq等命令的参数和使用方法。">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/linux.html">Linux</a>
+                <a href="/categories/cpp.html">C++</a>
+                <a href="/categories/graphics.html">图形学</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <li><a href="/categories/linux.html">Linux 命令</a></li>
+                    <li><a href="/categories/cpp.html">C++ 知识</a></li>
+                    <li><a href="/categories/graphics.html">图形学</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content">
+                <article>
+                    <div class="article-header">
+                        <h1 class="article-title">Linux文本处理命令详解</h1>
+                        <div class="article-meta">
+                            <span>2024-03-22</span>
+                            <span>Linux</span>
+                        </div>
+                    </div>
+                    <div class="article-content"><h1>Linux文本处理命令详解</h1>
+<p>文本处理是Linux最强大的功能之一，本文详细介绍常用的文本处理命令。</p>
+<h2>1. grep - 文本搜索</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: grep</li>
+<li><strong>全称</strong>: global regular expression print</li>
+<li><strong>功能</strong>: 在文件中搜索匹配的行</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-i</code></td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>反向匹配（显示不包含关键词的行）</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>统计匹配行数</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>递归搜索目录</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>只显示文件名</td>
+</tr>
+<tr>
+<td><code>-w</code></td>
+<td>匹配整个单词</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td>只显示匹配的部分</td>
+</tr>
+<tr>
+<td><code>-E</code></td>
+<td>使用扩展正则表达式</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>从文件读取模式</td>
+</tr>
+<tr>
+<td><code>-A</code></td>
+<td>匹配行后显示n行</td>
+</tr>
+<tr>
+<td><code>-B</code></td>
+<td>匹配行前显示n行</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 基本搜索
+grep &quot;keyword&quot; file.txt
+
+# 忽略大小写搜索
+grep -i &quot;keyword&quot; file.txt
+
+# 显示行号
+grep -n &quot;keyword&quot; file.txt
+
+# 反向匹配（显示不包含keyword的行）
+grep -v &quot;keyword&quot; file.txt
+
+# 统计匹配行数
+grep -c &quot;keyword&quot; file.txt
+
+# 递归搜索目录
+grep -r &quot;keyword&quot; /path/to/dir
+
+# 只显示文件名
+grep -l &quot;keyword&quot; *.txt
+
+# 匹配整个单词
+grep -w &quot;keyword&quot; file.txt
+
+# 使用正则表达式
+grep -E &quot;pattern[0-9]+&quot; file.txt
+
+# 显示匹配行及其后3行
+grep -A 3 &quot;keyword&quot; file.txt
+
+# 显示匹配行及其前3行
+grep -B 3 &quot;keyword&quot; file.txt
+
+# 显示匹配行及其前后各2行
+grep -C 2 &quot;keyword&quot; file.txt
+
+# 从文件读取搜索模式
+grep -f patterns.txt file.txt
+
+# 多文件搜索
+grep &quot;keyword&quot; file1.txt file2.txt
+
+# 显示不包含keyword的文件
+grep -L &quot;keyword&quot; *.txt
+
+# 高亮显示（彩色输出）
+grep --color=always &quot;keyword&quot; file.txt
+</code></pre>
+<h3>正则表达式示例</h3>
+<pre><code class="language-bash"># 匹配以word开头的行
+grep &quot;^word&quot; file.txt
+
+# 匹配以word结尾的行
+grep &quot;word{{content}}quot; file.txt
+
+# 匹配空行
+grep &quot;^{{content}}quot; file.txt
+
+# 匹配任意单个字符
+grep &quot;wo.d&quot; file.txt
+
+# 匹配数字
+grep -E &quot;[0-9]+&quot; file.txt
+
+# 匹配邮箱格式
+grep -E &quot;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}&quot; file.txt
+
+# 匹配IP地址
+grep -E &quot;([0-9]{1,3}\.){3}[0-9]{1,3}&quot; file.txt
+</code></pre>
+<h2>2. sed - 流编辑器</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: sed</li>
+<li><strong>全称</strong>: stream editor</li>
+<li><strong>功能</strong>: 对文本进行替换、删除、插入等操作</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-i</code></td>
+<td>直接修改文件</td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td>指定编辑命令</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>禁止自动输出</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>使用扩展正则表达式</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>从文件读取命令</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 替换所有匹配的字符串
+sed &#39;s/old/new/g&#39; file.txt
+
+# 替换第n行的匹配
+sed &#39;ns/old/new/&#39; file.txt
+
+# 替换每行第一个匹配
+sed &#39;s/old/new/&#39; file.txt
+
+# 删除包含keyword的行
+sed &#39;/keyword/d&#39; file.txt
+
+# 删除空行
+sed &#39;/^$/d&#39; file.txt
+
+# 删除指定行
+sed &#39;1d&#39; file.txt       # 删除第1行
+sed &#39;1,5d&#39; file.txt     # 删除1到5行
+
+# 在第n行后插入内容
+sed &#39;1a\新内容&#39; file.txt
+
+# 在第n行前插入内容
+sed &#39;1i\新内容&#39; file.txt
+
+# 替换多行
+sed &#39;1,3c\新内容&#39; file.txt
+
+# 显示特定行
+sed -n &#39;5p&#39; file.txt        # 显示第5行
+sed -n &#39;5,10p&#39; file.txt     # 显示5到10行
+
+# 替换并保存到文件
+sed -i &#39;s/old/new/g&#39; file.txt
+
+# 使用正则表达式替换
+sed -E &#39;s/[0-9]+/NUM/g&#39; file.txt
+
+# 多命令组合
+sed -e &#39;s/old1/new1/g&#39; -e &#39;s/old2/new2/g&#39; file.txt
+
+# 打印行号
+sed -n &#39;=&#39; file.txt
+
+# 替换指定位置的文本
+sed &#39;s/\bword\b/replacement/g&#39; file.txt   # 替换整个单词
+
+# 使用&amp;代表匹配的内容
+sed &#39;s/word/[&amp;]/g&#39; file.txt   # 将word替换为[word]
+</code></pre>
+<h3>高级用法</h3>
+<pre><code class="language-bash"># 前后文替换
+sed &#39;/start/,/end/s/old/new/g&#39; file.txt
+
+# 条件替换（只在匹配某行时替换）
+sed &#39;/pattern1/s/old/new/g&#39; file.txt
+
+# 大小写转换
+sed &#39;s/[a-z]/\U&amp;/g&#39; file.txt   # 转大写
+sed &#39;s/[A-Z]/\L&amp;/g&#39; file.txt   # 转小写
+</code></pre>
+<h2>3. awk - 文本处理工具</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: awk</li>
+<li><strong>全称</strong>: Aho, Weinberger, Kernighan</li>
+<li><strong>功能</strong>: 强大的文本分析和报告生成工具</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-F</code></td>
+<td>指定字段分隔符</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>定义变量</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>从文件读取脚本</td>
+</tr>
+</tbody></table>
+<h3>内置变量</h3>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$0</td>
+<td>整行</td>
+</tr>
+<tr>
+<td>$1-$n</td>
+<td>第n个字段</td>
+</tr>
+<tr>
+<td>NF</td>
+<td>字段总数</td>
+</tr>
+<tr>
+<td>NR</td>
+<td>行号</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>字段分隔符</td>
+</tr>
+<tr>
+<td>RS</td>
+<td>行分隔符</td>
+</tr>
+<tr>
+<td>OFS</td>
+<td>输出字段分隔符</td>
+</tr>
+<tr>
+<td>ORS</td>
+<td>输出行分隔符</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 打印第一列
+awk &#39;{print $1}&#39; file.txt
+
+# 打印多列
+awk &#39;{print $1, $3}&#39; file.txt
+
+# 指定分隔符
+awk -F: &#39;{print $1}&#39; /etc/passwd
+
+# 使用多个分隔符
+awk -F&#39;[:/]&#39; &#39;{print $1}&#39; file.txt
+
+# 显示行号和内容
+awk &#39;{print NR, $0}&#39; file.txt
+
+# 显示特定行
+awk &#39;NR==5 {print}&#39; file.txt
+
+# 条件筛选
+awk &#39;$3 &gt; 80 {print}&#39; file.txt
+
+# 统计计算
+awk &#39;{sum+=$1} END {print sum}&#39; file.txt
+
+# 求平均值
+awk &#39;{sum+=$1} END {print sum/NR}&#39; file.txt
+
+# 查找最大值
+awk &#39;BEGIN{max=0} {if($1&gt;max) max=$1} END{print max}&#39; file.txt
+
+# 字符串处理
+awk &#39;{print toupper($1)}&#39; file.txt   # 转大写
+awk &#39;{print tolower($1)}&#39; file.txt   # 转小写
+awk &#39;{print length($0)}&#39; file.txt    # 长度
+
+# 格式化输出
+awk &#39;{printf &quot;%-10s %d\n&quot;, $1, $2}&#39; file.txt
+
+# 多条件
+awk &#39;/pattern1/ || /pattern2/ {print}&#39; file.txt
+
+# 区间选择
+awk &#39;NR&gt;=5 &amp;&amp; NR&lt;=10 {print}&#39; file.txt
+
+# 字段拼接
+awk &#39;{print $1 &quot;-&quot; $2}&#39; file.txt
+</code></pre>
+<h3>完整脚本示例</h3>
+<pre><code class="language-bash"># 统计日志中每个IP的访问次数
+awk &#39;{print $1}&#39; access.log | sort | uniq -c | sort -rn
+
+# 计算文件总大小
+ls -l | awk &#39;{sum+=$5} END {print sum}&#39;
+
+# 格式化输出表格
+awk -F: &#39;BEGIN{print &quot;Name\tID&quot;} {print $1&quot;\t&quot;$3} END{print &quot;---&quot;}&#39; /etc/passwd
+</code></pre>
+<h2>4. cut - 字段提取</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: cut</li>
+<li><strong>全称</strong>: cut</li>
+<li><strong>功能</strong>: 从文本中提取指定字段</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-d</code></td>
+<td>指定分隔符</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>指定要提取的字段</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>按字符提取</td>
+</tr>
+<tr>
+<td><code>-b</code></td>
+<td>按字节提取</td>
+</tr>
+<tr>
+<td><code>--complement</code></td>
+<td>取反</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 提取第一列（以Tab为分隔符）
+cut -f1 file.txt
+
+# 以冒号为分隔符提取第一列
+cut -d&#39;:&#39; -f1 /etc/passwd
+
+# 提取多个字段
+cut -d&#39;:&#39; -f1,3,5 /etc/passwd
+
+# 提取第1到5个字符
+cut -c1-5 file.txt
+
+# 提取前10个字符
+cut -c-10 file.txt
+
+# 从第5个字符开始提取
+cut -c5- file.txt
+
+# 提取特定字符
+cut -c1,3,5 file.txt
+
+# 不包含指定字段
+cut -d&#39;:&#39; --complement -f1 /etc/passwd   # 除了第一列
+
+# 合并多个文件
+cut -d&#39;,&#39; -f1 file1.txt file2.txt
+</code></pre>
+<h2>5. sort - 排序</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: sort</li>
+<li><strong>全称</strong>: sort</li>
+<li><strong>功能</strong>: 对文本进行排序</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-r</code></td>
+<td>反向排序</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>数字排序</td>
+</tr>
+<tr>
+<td><code>-k</code></td>
+<td>按指定字段排序</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>指定字段分隔符</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>去重</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td><code>-b</code></td>
+<td>忽略前导空白</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td>输出到文件</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 按字母排序
+sort file.txt
+
+# 反向排序
+sort -r file.txt
+
+# 数字排序
+sort -n numbers.txt
+
+# 按第二列排序
+sort -k2 file.txt
+
+# 以冒号为分隔符按第三列排序
+sort -t&#39;:&#39; -k3 /etc/passwd
+
+# 数字比较
+sort -n -k2 file.txt
+
+# 忽略大小写排序
+sort -f file.txt
+
+# 去重排序
+sort -u file.txt
+
+# 输出到文件
+sort file.txt -o sorted.txt
+
+# 组合：按数字第三列反向排序
+sort -rn -k3 file.txt
+
+# 检查是否已排序
+sort -c file.txt
+
+# 稳定排序（相同值保持原顺序）
+sort -s file.txt
+</code></pre>
+<h2>6. uniq - 去重</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: uniq</li>
+<li><strong>全称</strong>: unique</li>
+<li><strong>功能</strong>: 去除重复行（需配合sort使用）</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-c</code></td>
+<td>显示每行出现次数</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>只显示重复行</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>只显示不重复的行</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>跳过前n个字段比较</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td>跳过前n个字符比较</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 去重（需先排序）
+sort file.txt | uniq
+
+# 统计每行出现次数
+sort file.txt | uniq -c
+
+# 只显示重复行
+sort file.txt | uniq -d
+
+# 只显示不重复的行
+sort file.txt | uniq -u
+
+# 忽略大小写
+sort file.txt | uniq -i
+
+# 跳过前2个字段比较
+sort file.txt | uniq -f2
+</code></pre>
+<h2>7. wc - 文本统计</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: wc</li>
+<li><strong>全称</strong>: word count</li>
+<li><strong>功能</strong>: 统计行数、单词数、字符数</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-l</code></td>
+<td>统计行数</td>
+</tr>
+<tr>
+<td><code>-w</code></td>
+<td>统计单词数</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>统计字符数</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td>统计字符数（不包括换行）</td>
+</tr>
+<tr>
+<td><code>-L</code></td>
+<td>显示最长行的长度</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 统计行数
+wc -l file.txt
+
+# 统计单词数
+wc -w file.txt
+
+# 统计字节数
+wc -c file.txt
+
+# 统计所有
+wc file.txt
+
+# 统计多个文件
+wc -l *.txt
+
+# 显示最长行长度
+wc -L file.txt
+</code></pre>
+<h2>8. tr - 字符转换</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: tr</li>
+<li><strong>全称</strong>: translate</li>
+<li><strong>功能</strong>: 字符转换、删除、压缩</li>
+</ul>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 转换为小写
+echo &quot;HELLO&quot; | tr &#39;A-Z&#39; &#39;a-z&#39;
+
+# 转换为大写
+echo &quot;hello&quot; | tr &#39;a-z&#39; &#39;A-Z&#39;
+
+# 删除特定字符
+echo &quot;hello123&quot; | tr -d &#39;0-9&#39;
+
+# 压缩连续相同字符
+echo &quot;helloooo&quot; | tr -s &#39;o&#39;
+
+# 删除换行符（合并为单行）
+cat file.txt | tr &#39;\n&#39; &#39; &#39;
+
+# 替换特定字符
+echo &quot;hello&quot; | tr &#39;l&#39; &#39;L&#39;
+
+# 删除数字
+cat file.txt | tr -d &#39;[0-9]&#39;
+</code></pre>
+<h2>9. tee - 分输出</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: tee</li>
+<li><strong>全称</strong>: tee</li>
+<li><strong>功能</strong>: 同时输出到终端和文件</li>
+</ul>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 同时显示和保存
+command | tee output.txt
+
+# 追加模式
+command | tee -a output.txt
+
+# 多重管道
+command1 | tee file1.txt | command2
+
+# 记录日志
+echo $(date) &quot; - Starting process&quot; | tee -a log.txt
+</code></pre>
+<h2>10. diff - 文件对比</h2>
+<h3>命令基本信息</h3>
+<ul>
+<li><strong>缩写</strong>: diff</li>
+<li><strong>全称</strong>: difference</li>
+<li><strong>功能</strong>: 比较两个文件的差异</li>
+</ul>
+<h3>常用参数</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-u</code></td>
+<td>统一格式输出</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>上下文格式</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>递归比较目录</td>
+</tr>
+<tr>
+<td><code>-q</code></td>
+<td>只显示是否有差异</td>
+</tr>
+</tbody></table>
+<h3>常用示例</h3>
+<pre><code class="language-bash"># 比较两个文件
+diff file1.txt file2.txt
+
+# 统一格式输出
+diff -u file1.txt file2.txt
+
+# 上下文格式
+diff -c file1.txt file2.txt
+
+# 忽略大小写
+diff -i file1.txt file2.txt
+
+# 只显示差异摘要
+diff -q file1.txt file2.txt
+
+# 并排显示
+diff -y file1.txt file2.txt
+</code></pre>
+<h2>总结</h2>
+<p>这些命令可以组合使用，发挥更强大的功能：</p>
+<pre><code class="language-bash"># 统计日志中各IP访问量并排序
+grep &quot;pattern&quot; access.log | cut -d&#39; &#39; -f1 | sort | uniq -c | sort -rn
+
+# 查找并替换
+grep -n &quot;old&quot; file.txt | sed &#39;s/old/new/g&#39;
+
+# 批量处理
+for f in *.txt; do sed -i &#39;s/old/new/g&#39; &quot;$f&quot;; done
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>主要用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>grep</td>
+<td>文本搜索</td>
+</tr>
+<tr>
+<td>sed</td>
+<td>文本替换/编辑</td>
+</tr>
+<tr>
+<td>awk</td>
+<td>复杂文本处理</td>
+</tr>
+<tr>
+<td>cut</td>
+<td>字段提取</td>
+</tr>
+<tr>
+<td>sort</td>
+<td>排序</td>
+</tr>
+<tr>
+<td>uniq</td>
+<td>去重</td>
+</tr>
+<tr>
+<td>wc</td>
+<td>统计</td>
+</tr>
+<tr>
+<td>tr</td>
+<td>字符转换</td>
+</tr>
+<tr>
+<td>diff</td>
+<td>文件对比</td>
+</tr>
+</tbody></table>
+</div>
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+                        <a href="/" style="color: var(--accent-blue);">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} | TechBlog</title>
+    <meta name="description" content="{{excerpt}}">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/linux.html">Linux</a>
+                <a href="/categories/cpp.html">C++</a>
+                <a href="/categories/graphics.html">图形学</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <li><a href="/categories/linux.html">Linux 命令</a></li>
+                    <li><a href="/categories/cpp.html">C++ 知识</a></li>
+                    <li><a href="/categories/graphics.html">图形学</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav">{{recent-posts}}</ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content">
+                <article>
+                    <div class="article-header">
+                        <h1 class="article-title">{{title}}</h1>
+                        <div class="article-meta">
+                            <span>{{date}}</span>
+                            <span>{{category}}</span>
+                        </div>
+                    </div>
+                    <div class="article-content">{{content}}</div>
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+                        <a href="/" style="color: var(--accent-blue);">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+    </script>
+</body>
+</html>
