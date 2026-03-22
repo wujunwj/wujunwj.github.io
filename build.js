@@ -21,12 +21,8 @@ marked.setOptions({
 });
 
 const renderer = new marked.Renderer();
-const originalHeadingRenderer = renderer.heading.bind(renderer);
 renderer.heading = function(text, level) {
   const id = slugify(text);
-  if (level === 1) {
-    return `<h1 id="${id}">${text}</h1>`;
-  }
   return `<h${level} id="${id}">${text}</h${level}>`;
 };
 marked.use({ renderer });
@@ -38,9 +34,9 @@ function readTemplate(name) {
 function extractToc(markdownBody) {
   const headings = [];
   const lines = markdownBody.split('\n');
-  let currentH1 = null;
   let currentH2 = null;
   let inCodeBlock = false;
+  let isFirstLine = true;
   
   for (const line of lines) {
     if (line.match(/^```/)) {
@@ -49,23 +45,14 @@ function extractToc(markdownBody) {
     }
     if (inCodeBlock) continue;
     
-    const h1Match = line.match(/^# (.+)/);
     const h2Match = line.match(/^## (.+)/);
     const h3Match = line.match(/^### (.+)/);
     
-    if (h1Match) {
-      const id = slugify(h1Match[1]);
-      currentH1 = { title: h1Match[1], id, level: 1, children: [] };
-      headings.push(currentH1);
-      currentH2 = null;
-    } else if (h2Match) {
+    if (h2Match) {
       const id = slugify(h2Match[1]);
       currentH2 = { title: h2Match[1], id, level: 2, children: [] };
-      if (currentH1) {
-        currentH1.children.push(currentH2);
-      } else {
-        headings.push(currentH2);
-      }
+      headings.push(currentH2);
+      isFirstLine = false;
     } else if (h3Match && currentH2) {
       const id = slugify(h3Match[1]);
       currentH2.children.push({ title: h3Match[1], id, level: 3 });
@@ -115,21 +102,12 @@ function build() {
       if (!toc || toc.length === 0) return '<li><span style="color: var(--text-muted); font-size: 12px;">暂无目录</span></li>';
       let html = '';
       for (const item of toc) {
-        const levelClass = item.level === 1 ? 'article-toc-h1' : (item.level === 2 ? 'article-toc-h2' : 'article-toc-h3');
+        const levelClass = item.level === 2 ? 'article-toc-h2' : 'article-toc-h3';
         html += `<li class="${levelClass}"><a href="#${item.id}">${item.title}</a>`;
         if (item.children && item.children.length > 0) {
           html += '<ul>';
           for (const child of item.children) {
-            const childLevelClass = child.level === 1 ? 'article-toc-h1' : (child.level === 2 ? 'article-toc-h2' : 'article-toc-h3');
-            html += `<li class="${childLevelClass}"><a href="#${child.id}">${child.title}</a>`;
-            if (child.children && child.children.length > 0) {
-              html += '<ul>';
-              for (const grandchild of child.children) {
-                html += `<li class="article-toc-h3"><a href="#${grandchild.id}">${grandchild.title}</a></li>`;
-              }
-              html += '</ul>';
-            }
-            html += '</li>';
+            html += `<li class="article-toc-h3"><a href="#${child.id}">${child.title}</a></li>`;
           }
           html += '</ul>';
         }

@@ -91,9 +91,9 @@
             return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
         }
         
-        document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3').forEach((el, index) => {
+        document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
             if (!el.id) {
-                el.id = slugify(el.textContent) + '-' + index;
+                el.id = slugify(el.textContent);
             }
         });
 
@@ -107,7 +107,7 @@
             });
         });
 
-        const headings = document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3');
+        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
         const tocLinks = document.querySelectorAll('.article-toc-list a');
         
         function updateActiveHeading() {
