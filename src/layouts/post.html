@@ -91,9 +91,19 @@
             return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
         }
         
-        document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
+        let h2Count = 0;
+        let h3Count = 0;
+        document.querySelectorAll('.article-body h2').forEach((el, index) => {
+            h2Count++;
+            h3Count = 0;
             if (!el.id) {
-                el.id = slugify(el.textContent);
+                el.id = slugify(el.textContent) + '-' + h2Count;
+            }
+        });
+        document.querySelectorAll('.article-body h3').forEach((el) => {
+            h3Count++;
+            if (!el.id) {
+                el.id = slugify(el.textContent) + '-' + h2Count + '-' + h3Count;
             }
         });
 
