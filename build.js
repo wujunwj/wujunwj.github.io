@@ -21,9 +21,16 @@ marked.setOptions({
 });
 
 const renderer = new marked.Renderer();
+var markedIdCounter = {};
 renderer.heading = function(text, level) {
-  const id = slugify(text);
-  return `<h${level} id="${id}">${text}</h${level}>`;
+  var slug = slugify(text);
+  if (!markedIdCounter[slug]) {
+    markedIdCounter[slug] = 1;
+  } else {
+    markedIdCounter[slug]++;
+    slug = slug + '-' + markedIdCounter[slug];
+  }
+  return `<h${level} id="${slug}">${text}</h${level}>`;
 };
 marked.use({ renderer });
 
@@ -71,6 +78,7 @@ function extractToc(markdownBody) {
 }
 
 function processMarkdown(mdPath) {
+  markedIdCounter = {};
   const content = fs.readFileSync(mdPath, 'utf8');
   const { attributes, body } = frontmatter(content);
   const toc = extractToc(body);
