@@ -44,15 +44,15 @@
                 <div class="sidebar-title">最近文章</div>
                 <ul class="sidebar-nav"></ul>
             </div>
+            <div class="sidebar-section sidebar-toc">
+                <div class="toc-sticky">
+                    <div class="toc-title">目录</div>
+                    <ul class="toc-list"><li><a href="#1-ps-查看进程状态">1. ps - 查看进程状态</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#输出字段说明">输出字段说明</a></li><li><a href="#进程状态说明">进程状态说明</a></li></ul></li><li><a href="#2-top-实时监控系统进程">2. top - 实时监控系统进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#top-交互命令">top 交互命令</a></li><li><a href="#top-界面说明">top 界面说明</a></li></ul></li><li><a href="#3-htop-增强版进程查看器">3. htop - 增强版进程查看器</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#htop-交互操作">htop 交互操作</a></li></ul></li><li><a href="#4-kill-终止进程">4. kill - 终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用信号">常用信号</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#5-killall-按名称终止进程">5. killall - 按名称终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#优先级范围">优先级范围</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#8-nohup-后台运行程序">8. nohup - 后台运行程序</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#9-jobs-查看后台任务">9. jobs - 查看后台任务</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#总结">总结</a></li></ul>
+                </div>
+            </div>
         </aside>
         <main class="main">
             <div class="content post-layout">
-                <div class="toc-sidebar">
-                    <div class="toc-sticky">
-                        <div class="toc-title">目录</div>
-                        <ul class="toc-list"><li><a href="#1-ps-查看进程状态">1. ps - 查看进程状态</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#输出字段说明">输出字段说明</a></li><li><a href="#进程状态说明">进程状态说明</a></li></ul></li><li><a href="#2-top-实时监控系统进程">2. top - 实时监控系统进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#top-交互命令">top 交互命令</a></li><li><a href="#top-界面说明">top 界面说明</a></li></ul></li><li><a href="#3-htop-增强版进程查看器">3. htop - 增强版进程查看器</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#htop-交互操作">htop 交互操作</a></li></ul></li><li><a href="#4-kill-终止进程">4. kill - 终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用信号">常用信号</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#5-killall-按名称终止进程">5. killall - 按名称终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#优先级范围">优先级范围</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#8-nohup-后台运行程序">8. nohup - 后台运行程序</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#9-jobs-查看后台任务">9. jobs - 查看后台任务</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#总结">总结</a></li></ul>
-                    </div>
-                </div>
                 <article class="post-content">
                     <div class="article-header">
                         <h1 class="article-title">Linux进程管理命令详解</h1>
@@ -61,17 +61,13 @@
                             <span>Linux</span>
                         </div>
                     </div>
-                    <div class="article-body"><h1>Linux进程管理命令详解</h1>
-<p>进程管理是Linux系统管理的核心技能，本文详细介绍常用的进程管理命令。</p>
-<h2>1. ps - 查看进程状态</h2>
-<h3>命令基本信息</h3>
-<ul>
+                    <div class="article-body"><h1 id="linux进程管理命令详解">Linux进程管理命令详解</h1><p>进程管理是Linux系统管理的核心技能，本文详细介绍常用的进程管理命令。</p>
+<h2 id="1-ps-查看进程状态">1. ps - 查看进程状态</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: ps</li>
 <li><strong>全称</strong>: process status</li>
 <li><strong>功能</strong>: 显示当前进程状态</li>
 </ul>
-<h3>常用参数</h3>
-<table>
+<h3 id="常用参数">常用参数</h3><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -111,8 +107,7 @@
 <td>指定排序方式</td>
 </tr>
 </tbody></table>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 查看当前终端的进程
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 查看当前终端的进程
 ps
 
 # 查看所有进程
@@ -145,8 +140,7 @@ ps -ef | grep nginx
 # 查看进程的详细信息
 ps -p 1234 -o pid,ppid,cmd,etime
 </code></pre>
-<h3>输出字段说明</h3>
-<pre><code>PID    TTY     STAT   TIME   COMMAND
+<h3 id="输出字段说明">输出字段说明</h3><pre><code>PID    TTY     STAT   TIME   COMMAND
 1234   pts/0   Ss     0:00   /bin/bash
 |      |       |      |      |
 |      |       |      |      └─ 命令
@@ -155,8 +149,7 @@ ps -p 1234 -o pid,ppid,cmd,etime
 |      └──────────────────────── 终端
 └─────────────────────────────── 进程ID
 </code></pre>
-<h3>进程状态说明</h3>
-<table>
+<h3 id="进程状态说明">进程状态说明</h3><table>
 <thead>
 <tr>
 <th>状态</th>
@@ -200,15 +193,12 @@ ps -p 1234 -o pid,ppid,cmd,etime
 <td>多线程进程</td>
 </tr>
 </tbody></table>
-<h2>2. top - 实时监控系统进程</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="2-top-实时监控系统进程">2. top - 实时监控系统进程</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: top</li>
 <li><strong>全称</strong>: top</li>
 <li><strong>功能</strong>: 实时显示系统进程状态和资源使用情况</li>
 </ul>
-<h3>常用参数</h3>
-<table>
+<h3 id="常用参数">常用参数</h3><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -240,8 +230,7 @@ ps -p 1234 -o pid,ppid,cmd,etime
 <td>显示线程</td>
 </tr>
 </tbody></table>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 启动top（默认3秒刷新）
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 启动top（默认3秒刷新）
 top
 
 # 每1秒刷新一次
@@ -262,8 +251,7 @@ top -H
 # 批处理模式（适合脚本）
 top -b -n 1 &gt; top.log
 </code></pre>
-<h3>top 交互命令</h3>
-<p>在 top 运行期间可以按以下键：</p>
+<h3 id="top-交互命令">top 交互命令</h3><p>在 top 运行期间可以按以下键：</p>
 <pre><code>h       - 显示帮助
 q       - 退出
 c       - 切换显示命令/完整路径
@@ -277,8 +265,7 @@ o       - 调整字段顺序
 1       - 显示所有CPU核心
 z       - 切换颜色
 </code></pre>
-<h3>top 界面说明</h3>
-<pre><code>top - 10:30:15 up 5 days,  3:22,  1 user,  load average: 0.52, 0.58, 0.59
+<h3 id="top-界面说明">top 界面说明</h3><pre><code>top - 10:30:15 up 5 days,  3:22,  1 user,  load average: 0.52, 0.58, 0.59
 任务: 123 total,   1 running, 122 sleeping,   0 stopped,   0 zombie
 %Cpu(s):  3.1 us,  1.2 sy,  0.0 ni, 95.2 id,  0.0 wa,  0.5 hi,  0.0 si
 MiB Mem :  16384.0 total,   8192.0 free,   4096.0 used,   4096.0 buff/cache
@@ -287,15 +274,12 @@ MiB Swap:   4096.0 total,   4096.0 free,      0.0 used.   8192.0 avail Mem
   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
  1234 user      20   0  512344  123456  34567 S   5.2   0.8   0:05.23 nginx
 </code></pre>
-<h2>3. htop - 增强版进程查看器</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="3-htop-增强版进程查看器">3. htop - 增强版进程查看器</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: htop</li>
 <li><strong>全称</strong>: htop</li>
 <li><strong>功能</strong>: 比top更友好的交互式进程查看器（需安装）</li>
 </ul>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 启动htop
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 启动htop
 htop
 
 # 显示特定用户的进程
@@ -307,8 +291,7 @@ htop -p 1234
 # 只显示特定命令
 htop -c
 </code></pre>
-<h3>htop 交互操作</h3>
-<pre><code>F1      - 帮助
+<h3 id="htop-交互操作">htop 交互操作</h3><pre><code>F1      - 帮助
 F2      - 设置
 F3      - 搜索
 F4      - 过滤器
@@ -320,15 +303,12 @@ F9      - 终止进程
 空格     - 标记进程
 ↑↓      - 选择进程
 </code></pre>
-<h2>4. kill - 终止进程</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="4-kill-终止进程">4. kill - 终止进程</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: kill</li>
 <li><strong>全称</strong>: kill</li>
 <li><strong>功能</strong>: 向进程发送信号</li>
 </ul>
-<h3>常用参数</h3>
-<table>
+<h3 id="常用参数">常用参数</h3><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -356,8 +336,7 @@ F9      - 终止进程
 <td>优雅终止进程（默认）</td>
 </tr>
 </tbody></table>
-<h3>常用信号</h3>
-<table>
+<h3 id="常用信号">常用信号</h3><table>
 <thead>
 <tr>
 <th>信号</th>
@@ -396,8 +375,7 @@ F9      - 终止进程
 <td>暂停进程</td>
 </tr>
 </tbody></table>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 列出所有信号
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 列出所有信号
 kill -l
 
 # 终止进程（发送SIGTERM信号）
@@ -424,15 +402,12 @@ kill -9 -u username
 # 终止指定进程及其子进程
 kill -9 -PID
 </code></pre>
-<h2>5. killall - 按名称终止进程</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="5-killall-按名称终止进程">5. killall - 按名称终止进程</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: killall</li>
 <li><strong>全称</strong>: killall</li>
 <li><strong>功能</strong>: 按进程名称终止进程</li>
 </ul>
-<h3>常用参数</h3>
-<table>
+<h3 id="常用参数">常用参数</h3><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -460,8 +435,7 @@ kill -9 -PID
 <td>忽略大小写</td>
 </tr>
 </tbody></table>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 按名称终止所有nginx进程
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 按名称终止所有nginx进程
 killall nginx
 
 # 交互模式
@@ -476,15 +450,12 @@ killall -I nginx
 # 等待进程退出
 killall -w nginx
 </code></pre>
-<h2>6. pkill - 按名称查找并终止进程</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: pkill</li>
 <li><strong>全称</strong>: pkill</li>
 <li><strong>功能</strong>: 按名称或属性查找并终止进程</li>
 </ul>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 按名称终止进程
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 按名称终止进程
 pkill nginx
 
 # 完整匹配
@@ -499,21 +470,17 @@ pkill -v nginx
 # 使用信号
 pkill -SIGTERM nginx
 </code></pre>
-<h2>7. nice/renice - 调整进程优先级</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: nice / renice</li>
 <li><strong>全称</strong>: nice / re-nice</li>
 <li><strong>功能</strong>: 调整进程优先级</li>
 </ul>
-<h3>优先级范围</h3>
-<ul>
+<h3 id="优先级范围">优先级范围</h3><ul>
 <li>最高优先级: -20</li>
 <li>默认优先级: 0</li>
 <li>最低优先级: 19</li>
 </ul>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 以低优先级启动进程（优先级+10）
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 以低优先级启动进程（优先级+10）
 nice -n 10 ./myapp
 
 # 以指定优先级启动进程
@@ -528,15 +495,12 @@ renice +5 -u username
 # 调整进程组优先级
 renice +5 -p 1234
 </code></pre>
-<h2>8. nohup - 后台运行程序</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="8-nohup-后台运行程序">8. nohup - 后台运行程序</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: nohup</li>
 <li><strong>全称</strong>: no hang up</li>
 <li><strong>功能</strong>: 后台运行程序，忽略挂起信号</li>
 </ul>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 后台运行程序，输出到nohup.out
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 后台运行程序，输出到nohup.out
 nohup ./myapp &amp;
 
 # 后台运行，输出到指定文件
@@ -548,15 +512,12 @@ nohup ./myapp &gt; /dev/null &amp;
 # 后台运行，不输出到文件
 nohup ./myapp 2&gt;&amp;1 &amp;
 </code></pre>
-<h2>9. jobs - 查看后台任务</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="9-jobs-查看后台任务">9. jobs - 查看后台任务</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: jobs</li>
 <li><strong>全称</strong>: jobs</li>
 <li><strong>功能</strong>: 查看当前Shell的后台任务</li>
 </ul>
-<h3>常用参数</h3>
-<table>
+<h3 id="常用参数">常用参数</h3><table>
 <thead>
 <tr>
 <th>参数</th>
@@ -580,8 +541,7 @@ nohup ./myapp 2&gt;&amp;1 &amp;
 <td>只显示已停止的任务</td>
 </tr>
 </tbody></table>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 查看后台任务
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 查看后台任务
 jobs
 
 # 显示PID
@@ -599,15 +559,12 @@ fg
 # 查看任务编号
 jobs -n
 </code></pre>
-<h2>10. lsof - 查看进程打开的文件</h2>
-<h3>命令基本信息</h3>
-<ul>
+<h2 id="10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</h2><h3 id="命令基本信息">命令基本信息</h3><ul>
 <li><strong>缩写</strong>: lsof</li>
 <li><strong>全称</strong>: list open files</li>
 <li><strong>功能</strong>: 显示进程打开的文件</li>
 </ul>
-<h3>常用示例</h3>
-<pre><code class="language-bash"># 查看所有打开的文件
+<h3 id="常用示例">常用示例</h3><pre><code class="language-bash"># 查看所有打开的文件
 lsof
 
 # 查看特定进程打开的文件
@@ -628,8 +585,7 @@ lsof -i
 # 查看所有网络文件
 lsof -i -N
 </code></pre>
-<h2>总结</h2>
-<p>进程管理是Linux系统管理的核心。熟练使用这些命令可以帮助你：</p>
+<h2 id="总结">总结</h2><p>进程管理是Linux系统管理的核心。熟练使用这些命令可以帮助你：</p>
 <ol>
 <li><strong>监控</strong>: 使用 ps、top、htop 监控系统状态</li>
 <li><strong>控制</strong>: 使用 kill、pkill、killall 终止问题进程</li>
@@ -665,9 +621,13 @@ lsof -i -N
         const saved = localStorage.getItem('theme');
         document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
         document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
             if (!el.id) {
-                el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+                el.id = slugify(el.textContent);
             }
         });
 

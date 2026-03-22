@@ -44,15 +44,15 @@
                 <div class="sidebar-title">最近文章</div>
                 <ul class="sidebar-nav">{{recent-posts}}</ul>
             </div>
+            <div class="sidebar-section sidebar-toc">
+                <div class="toc-sticky">
+                    <div class="toc-title">目录</div>
+                    <ul class="toc-list">{{toc}}</ul>
+                </div>
+            </div>
         </aside>
         <main class="main">
             <div class="content post-layout">
-                <div class="toc-sidebar">
-                    <div class="toc-sticky">
-                        <div class="toc-title">目录</div>
-                        <ul class="toc-list">{{toc}}</ul>
-                    </div>
-                </div>
                 <article class="post-content">
                     <div class="article-header">
                         <h1 class="article-title">{{title}}</h1>
@@ -89,9 +89,13 @@
         const saved = localStorage.getItem('theme');
         document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
         document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
             if (!el.id) {
-                el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+                el.id = slugify(el.textContent);
             }
         });
 

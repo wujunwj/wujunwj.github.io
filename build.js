@@ -6,6 +6,10 @@ const { marked } = require('marked');
 const frontmatter = require('front-matter');
 const hljs = require('highlight.js');
 
+function slugify(text) {
+  return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 marked.setOptions({
   highlight: function(code, lang) {
     if (lang && hljs.getLanguage(lang)) {
@@ -15,6 +19,17 @@ marked.setOptions({
   },
   gfm: true, breaks: true
 });
+
+const renderer = new marked.Renderer();
+const originalHeadingRenderer = renderer.heading.bind(renderer);
+renderer.heading = function(text, level) {
+  const id = slugify(text);
+  if (level === 1) {
+    return `<h1 id="${id}">${text}</h1>`;
+  }
+  return `<h${level} id="${id}">${text}</h${level}>`;
+};
+marked.use({ renderer });
 
 function readTemplate(name) {
   return fs.readFileSync(path.join(__dirname, 'src', 'layouts', `${name}.html`), 'utf8');
@@ -30,11 +45,11 @@ function extractToc(markdownBody) {
     const h3Match = line.match(/^### (.+)/);
     
     if (h2Match) {
-      const id = h2Match[1].toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+      const id = slugify(h2Match[1]);
       currentH2 = { title: h2Match[1], id, children: [] };
       headings.push(currentH2);
     } else if (h3Match && currentH2) {
-      const id = h3Match[1].toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+      const id = slugify(h3Match[1]);
       currentH2.children.push({ title: h3Match[1], id });
     }
   }
