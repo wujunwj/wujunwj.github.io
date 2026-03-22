@@ -167,16 +167,10 @@ body {
 .sidebar-nav a:hover { color: var(--text-primary); background: var(--bg-tertiary); }
 
 .sidebar-toc {
-    margin-top: auto;
     padding-top: 16px;
     padding-left: 10px;
     border-top: 1px solid var(--border-color);
-}
-
-.toc-sticky {
-    position: sticky;
-    top: 0;
-    max-height: calc(100vh - var(--header-height) - 32px);
+    max-height: calc(100vh - var(--header-height) - 200px);
     overflow-y: auto;
 }
 

@@ -40,8 +40,15 @@ function extractToc(markdownBody) {
   const lines = markdownBody.split('\n');
   let currentH1 = null;
   let currentH2 = null;
+  let inCodeBlock = false;
   
   for (const line of lines) {
+    if (line.match(/^```/)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+    
     const h1Match = line.match(/^# (.+)/);
     const h2Match = line.match(/^## (.+)/);
     const h3Match = line.match(/^### (.+)/);
