@@ -111,7 +111,13 @@ function build() {
   for (const f of mdFiles) {
     const post = processMarkdown(f);
     posts.push(post);
-    
+  }
+
+  posts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+
+  const recentPosts = posts.slice(0, 5).map(p => `<li><a href="/posts/${p.slug}.html">${p.frontmatter.title}</a></li>`).join('\n');
+
+  for (const post of posts) {
     const outDir = path.join(outputDir, 'posts');
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
     
@@ -135,18 +141,16 @@ function build() {
 
     const html = readTemplate('post')
       .replace(/\{\{title\}\}/g, post.frontmatter.title || '')
-      .replace(/\{\{date\}\}/g, post.frontmatter.date || '')
+      .replace(/\{date\}/g, post.frontmatter.date || '')
       .replace(/\{\{category\}\}/g, post.frontmatter.category || '')
       .replace(/\{\{content\}\}/g, post.content)
       .replace(/\{\{excerpt\}\}/g, post.frontmatter.excerpt || '')
-      .replace(/\{\{recent-posts\}\}/g, '')
+      .replace(/\{\{recent-posts\}\}/g, recentPosts)
       .replace(/\{\{toc\}\}/g, buildTocHtml(post.toc));
     
     fs.writeFileSync(path.join(outDir, `${post.slug}.html`), html);
     console.log(`✓ ${post.frontmatter.title}`);
   }
-
-  posts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
 
   const postsHtml = posts.map(p => `
     <a href="/posts/${p.slug}.html" class="post-item">
@@ -154,8 +158,6 @@ function build() {
       <div class="meta"><span>${p.frontmatter.date}</span><span>${p.frontmatter.category}</span></div>
       <p class="excerpt">${p.frontmatter.excerpt || ''}</p>
     </a>`).join('\n');
-
-  const recentPosts = posts.slice(0, 5).map(p => `<li><a href="/posts/${p.slug}.html">${p.frontmatter.title}</a></li>`).join('\n');
 
   const indexHtml = readTemplate('index')
     .replace(/\{\{posts\}\}/g, postsHtml)
