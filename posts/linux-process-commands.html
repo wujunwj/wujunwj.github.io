@@ -47,7 +47,7 @@
             <div class="sidebar-section sidebar-toc">
                 <div class="toc-sticky">
                     <div class="toc-title">目录</div>
-                    <ul class="toc-list"><li><a href="#1-ps-查看进程状态">1. ps - 查看进程状态</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#输出字段说明">输出字段说明</a></li><li><a href="#进程状态说明">进程状态说明</a></li></ul></li><li><a href="#2-top-实时监控系统进程">2. top - 实时监控系统进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#top-交互命令">top 交互命令</a></li><li><a href="#top-界面说明">top 界面说明</a></li></ul></li><li><a href="#3-htop-增强版进程查看器">3. htop - 增强版进程查看器</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#htop-交互操作">htop 交互操作</a></li></ul></li><li><a href="#4-kill-终止进程">4. kill - 终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用信号">常用信号</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#5-killall-按名称终止进程">5. killall - 按名称终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#优先级范围">优先级范围</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#8-nohup-后台运行程序">8. nohup - 后台运行程序</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#9-jobs-查看后台任务">9. jobs - 查看后台任务</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#总结">总结</a></li></ul>
+                    <ul class="toc-list"><li class="toc-h1"><a href="#linux进程管理命令详解">Linux进程管理命令详解</a><ul><li class="toc-h2"><a href="#1-ps-查看进程状态">1. ps - 查看进程状态</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用参数">常用参数</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#查看当前终端的进程">查看当前终端的进程</a></li><li class="toc-h1"><a href="#查看所有进程">查看所有进程</a></li><li class="toc-h1"><a href="#查看所有进程-完整格式">查看所有进程（完整格式）</a></li><li class="toc-h1"><a href="#查看所有进程-详细格式">查看所有进程（详细格式）</a></li><li class="toc-h1"><a href="#显示进程树">显示进程树</a></li><li class="toc-h1"><a href="#查看特定用户的进程">查看特定用户的进程</a></li><li class="toc-h1"><a href="#自定义输出格式">自定义输出格式</a></li><li class="toc-h1"><a href="#按cpu使用率排序">按CPU使用率排序</a></li><li class="toc-h1"><a href="#按内存使用率排序">按内存使用率排序</a></li><li class="toc-h1"><a href="#查找特定进程">查找特定进程</a></li><li class="toc-h1"><a href="#查看进程的详细信息">查看进程的详细信息</a><ul><li class="toc-h2"><a href="#2-top-实时监控系统进程">2. top - 实时监控系统进程</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用参数">常用参数</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#启动top-默认3秒刷新">启动top（默认3秒刷新）</a></li><li class="toc-h1"><a href="#每1秒刷新一次">每1秒刷新一次</a></li><li class="toc-h1"><a href="#只显示特定用户的进程">只显示特定用户的进程</a></li><li class="toc-h1"><a href="#只监控特定进程">只监控特定进程</a></li><li class="toc-h1"><a href="#刷新10次后退出">刷新10次后退出</a></li><li class="toc-h1"><a href="#显示线程信息">显示线程信息</a></li><li class="toc-h1"><a href="#批处理模式-适合脚本">批处理模式（适合脚本）</a><ul><li class="toc-h2"><a href="#3-htop-增强版进程查看器">3. htop - 增强版进程查看器</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#启动htop">启动htop</a></li><li class="toc-h1"><a href="#显示特定用户的进程">显示特定用户的进程</a></li><li class="toc-h1"><a href="#显示特定pid">显示特定PID</a></li><li class="toc-h1"><a href="#只显示特定命令">只显示特定命令</a><ul><li class="toc-h2"><a href="#4-kill-终止进程">4. kill - 终止进程</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用参数">常用参数</a></li><li class="toc-h3"><a href="#常用信号">常用信号</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#列出所有信号">列出所有信号</a></li><li class="toc-h1"><a href="#终止进程-发送sigterm信号">终止进程（发送SIGTERM信号）</a></li><li class="toc-h1"><a href="#强制终止进程-发送sigkill信号">强制终止进程（发送SIGKILL信号）</a></li><li class="toc-h1"><a href="#优雅终止进程">优雅终止进程</a></li><li class="toc-h1"><a href="#终止进程并生成core文件">终止进程并生成core文件</a></li><li class="toc-h1"><a href="#按名称终止进程">按名称终止进程</a></li><li class="toc-h1"><a href="#强制终止按名称匹配的所有进程">强制终止按名称匹配的所有进程</a></li><li class="toc-h1"><a href="#终止特定用户的所有进程">终止特定用户的所有进程</a></li><li class="toc-h1"><a href="#终止指定进程及其子进程">终止指定进程及其子进程</a><ul><li class="toc-h2"><a href="#5-killall-按名称终止进程">5. killall - 按名称终止进程</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用参数">常用参数</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#按名称终止所有nginx进程">按名称终止所有nginx进程</a></li><li class="toc-h1"><a href="#交互模式">交互模式</a></li><li class="toc-h1"><a href="#强制终止">强制终止</a></li><li class="toc-h1"><a href="#忽略大小写">忽略大小写</a></li><li class="toc-h1"><a href="#等待进程退出">等待进程退出</a><ul><li class="toc-h2"><a href="#6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#按名称终止进程">按名称终止进程</a></li><li class="toc-h1"><a href="#完整匹配">完整匹配</a></li><li class="toc-h1"><a href="#终止指定用户的进程">终止指定用户的进程</a></li><li class="toc-h1"><a href="#显示终止的进程">显示终止的进程</a></li><li class="toc-h1"><a href="#使用信号">使用信号</a><ul><li class="toc-h2"><a href="#7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#优先级范围">优先级范围</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#以低优先级启动进程-优先级-10">以低优先级启动进程（优先级+10）</a></li><li class="toc-h1"><a href="#以指定优先级启动进程">以指定优先级启动进程</a></li><li class="toc-h1"><a href="#调整运行中进程的优先级">调整运行中进程的优先级</a></li><li class="toc-h1"><a href="#调整指定用户的所有进程优先级">调整指定用户的所有进程优先级</a></li><li class="toc-h1"><a href="#调整进程组优先级">调整进程组优先级</a><ul><li class="toc-h2"><a href="#8-nohup-后台运行程序">8. nohup - 后台运行程序</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#后台运行程序-输出到nohup-out">后台运行程序，输出到nohup.out</a></li><li class="toc-h1"><a href="#后台运行-输出到指定文件">后台运行，输出到指定文件</a></li><li class="toc-h1"><a href="#后台运行-丢弃输出">后台运行，丢弃输出</a></li><li class="toc-h1"><a href="#后台运行-不输出到文件">后台运行，不输出到文件</a><ul><li class="toc-h2"><a href="#9-jobs-查看后台任务">9. jobs - 查看后台任务</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用参数">常用参数</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#查看后台任务">查看后台任务</a></li><li class="toc-h1"><a href="#显示pid">显示PID</a></li><li class="toc-h1"><a href="#后台运行命令">后台运行命令</a></li><li class="toc-h1"><a href="#将前台任务放到后台-先按ctrl-z">将前台任务放到后台（先按Ctrl+Z）</a></li><li class="toc-h1"><a href="#将后台任务恢复到前台">将后台任务恢复到前台</a></li><li class="toc-h1"><a href="#查看任务编号">查看任务编号</a><ul><li class="toc-h2"><a href="#10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</a><ul><li class="toc-h3"><a href="#命令基本信息">命令基本信息</a></li><li class="toc-h3"><a href="#常用示例">常用示例</a></li></ul></li></ul></li><li class="toc-h1"><a href="#查看所有打开的文件">查看所有打开的文件</a></li><li class="toc-h1"><a href="#查看特定进程打开的文件">查看特定进程打开的文件</a></li><li class="toc-h1"><a href="#查看特定端口被哪个进程占用">查看特定端口被哪个进程占用</a></li><li class="toc-h1"><a href="#查看特定文件被哪些进程使用">查看特定文件被哪些进程使用</a></li><li class="toc-h1"><a href="#查看特定用户打开的文件">查看特定用户打开的文件</a></li><li class="toc-h1"><a href="#查看网络连接">查看网络连接</a></li><li class="toc-h1"><a href="#查看所有网络文件">查看所有网络文件</a><ul><li class="toc-h2"><a href="#总结">总结</a></li></ul></li></ul>
                 </div>
             </div>
         </aside>
@@ -625,7 +625,7 @@ lsof -i -N
             return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
         }
         
-        document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
+        document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3').forEach((el) => {
             if (!el.id) {
                 el.id = slugify(el.textContent);
             }
@@ -637,9 +637,33 @@ lsof -i -N
                 const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelectorAll('.toc-list a').forEach(link => link.classList.remove('active'));
+                    a.classList.add('active');
                 }
             });
         });
+
+        const headings = document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 150) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
     </script>
 </body>
 </html>

@@ -38,19 +38,30 @@ function readTemplate(name) {
 function extractToc(markdownBody) {
   const headings = [];
   const lines = markdownBody.split('\n');
+  let currentH1 = null;
   let currentH2 = null;
   
   for (const line of lines) {
+    const h1Match = line.match(/^# (.+)/);
     const h2Match = line.match(/^## (.+)/);
     const h3Match = line.match(/^### (.+)/);
     
-    if (h2Match) {
+    if (h1Match) {
+      const id = slugify(h1Match[1]);
+      currentH1 = { title: h1Match[1], id, level: 1, children: [] };
+      headings.push(currentH1);
+      currentH2 = null;
+    } else if (h2Match) {
       const id = slugify(h2Match[1]);
-      currentH2 = { title: h2Match[1], id, children: [] };
-      headings.push(currentH2);
+      currentH2 = { title: h2Match[1], id, level: 2, children: [] };
+      if (currentH1) {
+        currentH1.children.push(currentH2);
+      } else {
+        headings.push(currentH2);
+      }
     } else if (h3Match && currentH2) {
       const id = slugify(h3Match[1]);
-      currentH2.children.push({ title: h3Match[1], id });
+      currentH2.children.push({ title: h3Match[1], id, level: 3 });
     }
   }
   return headings;
@@ -97,11 +108,21 @@ function build() {
       if (!toc || toc.length === 0) return '<li><span style="color: var(--text-muted); font-size: 12px;">暂无目录</span></li>';
       let html = '';
       for (const item of toc) {
-        html += `<li><a href="#${item.id}">${item.title}</a>`;
+        const levelClass = item.level === 1 ? 'toc-h1' : (item.level === 2 ? 'toc-h2' : 'toc-h3');
+        html += `<li class="${levelClass}"><a href="#${item.id}">${item.title}</a>`;
         if (item.children && item.children.length > 0) {
           html += '<ul>';
           for (const child of item.children) {
-            html += `<li><a href="#${child.id}">${child.title}</a></li>`;
+            const childLevelClass = child.level === 1 ? 'toc-h1' : (child.level === 2 ? 'toc-h2' : 'toc-h3');
+            html += `<li class="${childLevelClass}"><a href="#${child.id}">${child.title}</a>`;
+            if (child.children && child.children.length > 0) {
+              html += '<ul>';
+              for (const grandchild of child.children) {
+                html += `<li class="toc-h3"><a href="#${grandchild.id}">${grandchild.title}</a></li>`;
+              }
+              html += '</ul>';
+            }
+            html += '</li>';
           }
           html += '</ul>';
         }

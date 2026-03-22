@@ -93,7 +93,7 @@
             return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
         }
         
-        document.querySelectorAll('.article-body h2, .article-body h3').forEach((el) => {
+        document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3').forEach((el) => {
             if (!el.id) {
                 el.id = slugify(el.textContent);
             }
@@ -105,9 +105,33 @@
                 const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.querySelectorAll('.toc-list a').forEach(link => link.classList.remove('active'));
+                    a.classList.add('active');
                 }
             });
         });
+
+        const headings = document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 150) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
     </script>
 </body>
 </html>
