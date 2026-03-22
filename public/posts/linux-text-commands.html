@@ -836,35 +836,6 @@ for f in *.txt; do sed -i &#39;s/old/new/g&#39; &quot;$f&quot;; done
         }
         
         var idCounter = {};
-        function getId(slug) {
-            if (!idCounter[slug]) {
-                idCounter[slug] = 1;
-                return slug;
-            }
-            return slug + '-' + (++idCounter[slug]);
-        }
-        
-        document.querySelectorAll('.article-body h2').forEach((el) => {
-            if (!el.id) {
-                el.id = getId(slugify(el.textContent));
-            }
-        });
-        document.querySelectorAll('.article-body h3').forEach((el) => {
-            if (!el.id) {
-                el.id = getId(slugify(el.textContent));
-            }
-        });
-
-        document.querySelectorAll('.article-toc-list a').forEach(a => {
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
         const headings = document.querySelectorAll('.article-body h2, .article-body h3');
         const tocLinks = document.querySelectorAll('.article-toc-list a');
         
