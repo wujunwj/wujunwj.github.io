@@ -24,6 +24,7 @@
                 <a href="/categories/linux.html">Linux</a>
                 <a href="/categories/cpp.html">C++</a>
                 <a href="/categories/graphics.html">图形学</a>
+                <a href="/categories/gpu.html">GPU</a>
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
@@ -36,6 +37,7 @@
                     <li><a href="/categories/linux.html">Linux 命令</a></li>
                     <li><a href="/categories/cpp.html">C++ 知识</a></li>
                     <li><a href="/categories/graphics.html">图形学</a></li>
+                    <li><a href="/categories/gpu.html">GPU</a></li>
                 </ul>
             </div>
             <div class="sidebar-section">
@@ -45,19 +47,22 @@
         </aside>
         <main class="main">
             <div class="content">
-                <article>
-                    <div class="article-header">
-                        <h1 class="article-title">{{title}}</h1>
-                        <div class="article-meta">
-                            <span>{{date}}</span>
-                            <span>{{category}}</span>
+                <div class="article-wrapper">
+                    {{toc}}
+                    <article class="article-main">
+                        <div class="article-header">
+                            <h1 class="article-title">{{title}}</h1>
+                            <div class="article-meta">
+                                <span>{{date}}</span>
+                                <span>{{category}}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="article-content">{{content}}</div>
-                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <a href="/" style="color: var(--accent-blue);">← 返回首页</a>
-                    </div>
-                </article>
+                        <div class="article-content">{{content}}</div>
+                        <div class="article-footer">
+                            <a href="/" class="back-link">← 返回首页</a>
+                        </div>
+                    </article>
+                </div>
             </div>
         </main>
     </div>
@@ -80,6 +85,12 @@
         }
         const saved = localStorage.getItem('theme');
         document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        document.querySelectorAll('.article-content h2, .article-content h3').forEach((el, i) => {
+            if (!el.id) {
+                el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+            }
+        });
     </script>
 </body>
 </html>

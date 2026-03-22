@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年主流GPU对比分析 | TechBlog</title>
+    <meta name="description" content="全面对比RTX 4090、H100、A100等主流GPU，从算力、带宽、价格等维度分析各卡定位与选购建议。">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/linux.html">Linux</a>
+                <a href="/categories/cpp.html">C++</a>
+                <a href="/categories/graphics.html">图形学</a>
+                <a href="/categories/gpu.html">GPU</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <li><a href="/categories/linux.html">Linux 命令</a></li>
+                    <li><a href="/categories/cpp.html">C++ 知识</a></li>
+                    <li><a href="/categories/graphics.html">图形学</a></li>
+                    <li><a href="/categories/gpu.html">GPU</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content">
+                <div class="article-wrapper">
+                    <div class="toc-container"><div class="toc-title">目录</div><ul class="toc-list"><li><a href="#1-消费级旗舰-nvidia-rtx-4090">1. 消费级旗舰：NVIDIA RTX 4090</a><ul><li><a href="#核心规格">核心规格</a></li><li><a href="#优势">优势</a></li><li><a href="#劣势">劣势</a></li></ul></li><li><a href="#2-数据中心入门-nvidia-a100">2. 数据中心入门：NVIDIA A100</a><ul><li><a href="#核心规格">核心规格</a></li><li><a href="#优势">优势</a></li><li><a href="#劣势">劣势</a></li></ul></li><li><a href="#3-ai训练王者-nvidia-h100">3. AI训练王者：NVIDIA H100</a><ul><li><a href="#核心规格">核心规格</a></li><li><a href="#优势">优势</a></li><li><a href="#劣势">劣势</a></li></ul></li><li><a href="#4-新一代blackwell-b200">4. 新一代Blackwell：B200</a><ul><li><a href="#核心规格">核心规格</a></li><li><a href="#优势">优势</a></li><li><a href="#劣势">劣势</a></li></ul></li><li><a href="#5-综合对比">5. 综合对比</a><ul><li><a href="#规格总览表">规格总览表</a></li><li><a href="#性价比分析">性价比分析</a></li><li><a href="#云服务价格-2025年平均-">云服务价格（2025年平均）</a></li></ul></li><li><a href="#6-应用场景推荐">6. 应用场景推荐</a><ul><li><a href="#个人开发者-小团队">个人开发者 / 小团队</a></li><li><a href="#中型企业-研究机构">中型企业 / 研究机构</a></li><li><a href="#超大规模-数据中心">超大规模 / 数据中心</a></li></ul></li><li><a href="#7-选型建议">7. 选型建议</a></li><li><a href="#总结">总结</a></li></ul></div>
+                    <article class="article-main">
+                        <div class="article-header">
+                            <h1 class="article-title">2025年主流GPU对比分析</h1>
+                            <div class="article-meta">
+                                <span>2026-03-22</span>
+                                <span>GPU</span>
+                            </div>
+                        </div>
+                        <div class="article-content"><h1>2025年主流GPU对比分析</h1>
+<p>随着AI技术的蓬勃发展，GPU已成为继CPU之后最重要的计算硬件。本文从算力、带宽、价格、应用场景等维度，全面对比当前主流GPU。</p>
+<h2>1. 消费级旗舰：NVIDIA RTX 4090</h2>
+<p>RTX 4090 是目前消费级市场最强的GPU，采用 Ada Lovelace 架构。</p>
+<h3>核心规格</h3>
+<table>
+<thead>
+<tr>
+<th>规格</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUDA 核心</td>
+<td>16,384</td>
+</tr>
+<tr>
+<td>加速频率</td>
+<td>2,520 MHz</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>24GB GDDR6X</td>
+</tr>
+<tr>
+<td>带宽</td>
+<td>1,008 GB/s</td>
+</tr>
+<tr>
+<td>TDP</td>
+<td>450W</td>
+</tr>
+<tr>
+<td>架构</td>
+<td>Ada Lovelace</td>
+</tr>
+</tbody></table>
+<h3>优势</h3>
+<ul>
+<li>性价比极高，约 $1,599 的售价</li>
+<li>支持 DLSS 3，游戏中表现顶级</li>
+<li>24GB 显存可运行 30B 以下模型推理</li>
+<li>功耗相对可控，450W TDP</li>
+<li>适合个人开发者、小团队</li>
+</ul>
+<h3>劣势</h3>
+<ul>
+<li>显存容量限制大模型训练</li>
+<li>无 NVLink，多卡互联受限</li>
+<li>企业级特性缺失（MIG等）</li>
+</ul>
+<h2>2. 数据中心入门：NVIDIA A100</h2>
+<p>A100 是 Ampere 架构的数据中心GPU，广泛应用于企业AI。</p>
+<h3>核心规格</h3>
+<table>
+<thead>
+<tr>
+<th>规格</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUDA 核心</td>
+<td>6,912</td>
+</tr>
+<tr>
+<td>加速频率</td>
+<td>1,410 MHz</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>40/80GB HBM2e</td>
+</tr>
+<tr>
+<td>带宽</td>
+<td>2,000 GB/s</td>
+</tr>
+<tr>
+<td>TDP</td>
+<td>400W</td>
+</tr>
+<tr>
+<td>架构</td>
+<td>Ampere</td>
+</tr>
+</tbody></table>
+<h3>优势</h3>
+<ul>
+<li>80GB HBM2e 显存，支持大模型</li>
+<li>NVLink 高速互联</li>
+<li>MIG 虚拟化，资源隔离</li>
+<li>企业级可靠性</li>
+</ul>
+<h3>劣势</h3>
+<ul>
+<li>张量计算性能被 H100 超越</li>
+<li>价格仍然较高</li>
+</ul>
+<h2>3. AI训练王者：NVIDIA H100</h2>
+<p>H100 是 Hopper 架构旗舰，专为大规模AI训练设计。</p>
+<h3>核心规格</h3>
+<table>
+<thead>
+<tr>
+<th>规格</th>
+<th>PCIe 版本</th>
+<th>SXM 版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUDA 核心</td>
+<td>14,592</td>
+<td>16,896</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>80GB HBM3</td>
+<td>80GB HBM3</td>
+</tr>
+<tr>
+<td>带宽</td>
+<td>2,000 GB/s</td>
+<td>3,350 GB/s</td>
+</tr>
+<tr>
+<td>FP16 算力</td>
+<td>~1,000 TFLOPS</td>
+<td>~3,958 TFLOPS</td>
+</tr>
+<tr>
+<td>TDP</td>
+<td>700W</td>
+<td>700W</td>
+</tr>
+<tr>
+<td>架构</td>
+<td>Hopper</td>
+<td>Hopper</td>
+</tr>
+</tbody></table>
+<h3>优势</h3>
+<ul>
+<li>原生 FP8 支持，训练效率大幅提升</li>
+<li>Transformer Engine 加速</li>
+<li>94GB 显存的 NVL 版本</li>
+<li>NVLink 4.0 高速互联</li>
+<li>MIG 7 实例隔离</li>
+</ul>
+<h3>劣势</h3>
+<ul>
+<li>价格高昂（$30,000+）</li>
+<li>功耗大，散热要求高</li>
+<li>普通用户难以承担</li>
+</ul>
+<h2>4. 新一代Blackwell：B200</h2>
+<p>2025年发布的 BlackWell 架构旗舰。</p>
+<h3>核心规格</h3>
+<table>
+<thead>
+<tr>
+<th>规格</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUDA 核心</td>
+<td>~20,000</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>192GB HBM3e</td>
+</tr>
+<tr>
+<td>带宽</td>
+<td>8 TB/s</td>
+</tr>
+<tr>
+<td>TDP</td>
+<td>1,000W</td>
+</tr>
+<tr>
+<td>架构</td>
+<td>Blackwell</td>
+</tr>
+</tbody></table>
+<h3>优势</h3>
+<ul>
+<li>史上最强算力</li>
+<li>支持 FP4 精度</li>
+<li>巨大显存，支撑超大模型</li>
+</ul>
+<h3>劣势</h3>
+<ul>
+<li>价格极其昂贵</li>
+<li>功耗惊人</li>
+<li>产能有限</li>
+</ul>
+<h2>5. 综合对比</h2>
+<h3>规格总览表</h3>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>架构</th>
+<th>显存</th>
+<th>带宽</th>
+<th>FP16算力</th>
+<th>TDP</th>
+<th>参考价格</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 4090</td>
+<td>Ada Lovelace</td>
+<td>24GB GDDR6X</td>
+<td>1,008 GB/s</td>
+<td>165 TFLOPS</td>
+<td>450W</td>
+<td>$1,599</td>
+</tr>
+<tr>
+<td>RTX 5090</td>
+<td>Blackwell</td>
+<td>32GB GDDR7</td>
+<td>~1.7 TB/s</td>
+<td>~380 TFLOPS</td>
+<td>575W</td>
+<td>$1,999</td>
+</tr>
+<tr>
+<td>A100 80GB</td>
+<td>Ampere</td>
+<td>80GB HBM2e</td>
+<td>2,000 GB/s</td>
+<td>312 TFLOPS</td>
+<td>400W</td>
+<td>$10,000+</td>
+</tr>
+<tr>
+<td>H100 PCIe</td>
+<td>Hopper</td>
+<td>80GB HBM3</td>
+<td>2,000 GB/s</td>
+<td>~1,000 TFLOPS</td>
+<td>700W</td>
+<td>$25,000+</td>
+</tr>
+<tr>
+<td>H100 SXM</td>
+<td>Hopper</td>
+<td>80GB HBM3</td>
+<td>3,350 GB/s</td>
+<td>~3,958 TFLOPS</td>
+<td>700W</td>
+<td>$30,000+</td>
+</tr>
+<tr>
+<td>H200</td>
+<td>Hopper</td>
+<td>141GB HBM3e</td>
+<td>4.8 TB/s</td>
+<td>~1,979 TFLOPS</td>
+<td>700W</td>
+<td>$40,000+</td>
+</tr>
+<tr>
+<td>B200</td>
+<td>Blackwell</td>
+<td>192GB HBM3e</td>
+<td>8 TB/s</td>
+<td>~20 PFLOPS</td>
+<td>1,000W</td>
+<td>$70,000+</td>
+</tr>
+</tbody></table>
+<h3>性价比分析</h3>
+<p>按 TFLOPS/$ 对比（以 FP16 算力计算）：</p>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>算力</th>
+<th>价格</th>
+<th>TFLOPS/$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 4090</td>
+<td>165 TFLOPS</td>
+<td>$1,599</td>
+<td>0.103</td>
+</tr>
+<tr>
+<td>A100</td>
+<td>312 TFLOPS</td>
+<td>$10,000</td>
+<td>0.031</td>
+</tr>
+<tr>
+<td>H100 PCIe</td>
+<td>1,000 TFLOPS</td>
+<td>$25,000</td>
+<td>0.040</td>
+</tr>
+<tr>
+<td>H100 SXM</td>
+<td>3,958 TFLOPS</td>
+<td>$30,000</td>
+<td>0.132</td>
+</tr>
+</tbody></table>
+<p><strong>结论</strong>：H100 SXM 性价比最高，但 RTX 4090 仍然是消费级最佳选择。</p>
+<h3>云服务价格（2025年平均）</h3>
+<table>
+<thead>
+<tr>
+<th>GPU</th>
+<th>小时价格</th>
+<th>月价格（约）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 4090</td>
+<td>$0.35-1.00</td>
+<td>$250-720</td>
+</tr>
+<tr>
+<td>A100</td>
+<td>$1.50-3.00</td>
+<td>$1,000-2,000</td>
+</tr>
+<tr>
+<td>H100</td>
+<td>$2.50-8.00</td>
+<td>$1,800-5,760</td>
+</tr>
+</tbody></table>
+<h2>6. 应用场景推荐</h2>
+<h3>个人开发者 / 小团队</h3>
+<p><strong>推荐：RTX 4090</strong></p>
+<ul>
+<li>预算友好，$1,599 起</li>
+<li>可运行 30B 以下模型推理</li>
+<li>支持微调和轻量训练</li>
+<li>社区资源丰富</li>
+</ul>
+<h3>中型企业 / 研究机构</h3>
+<p><strong>推荐：A100 或 H100</strong></p>
+<ul>
+<li>A100 性价比平衡，适合推理</li>
+<li>H100 用于大规模训练</li>
+<li>按需租用云服务</li>
+</ul>
+<h3>超大规模 / 数据中心</h3>
+<p><strong>推荐：H200 / B200</strong></p>
+<ul>
+<li>极致算力支撑超大模型</li>
+<li>多卡集群互联</li>
+<li>企业级支持与服务</li>
+</ul>
+<h2>7. 选型建议</h2>
+<ol>
+<li><strong>预算有限</strong>：选择 RTX 4090，满足大多数 AI 探索需求</li>
+<li><strong>追求性价比</strong>：优先考虑 RTX 4090 多卡方案</li>
+<li><strong>大模型训练</strong>：选择 H100 或 H200</li>
+<li><strong>生产级推理</strong>：A100 或 H100</li>
+<li><strong>极致性能</strong>：等待 B200 供货</li>
+</ol>
+<h2>总结</h2>
+<p>GPU 选型需要综合考虑算力需求、显存容量、预算限制和应用场景：</p>
+<ul>
+<li><strong>消费级</strong>：RTX 4090/5090 是最佳选择</li>
+<li><strong>企业入门</strong>：A100 提供平衡方案</li>
+<li><strong>AI 训练</strong>：H100/H200 是行业标准</li>
+<li><strong>未来趋势</strong>：Blackwell 架构引领下一代计算</li>
+</ul>
+<p>选择适合自己需求的GPU，才能最大化投入产出比。</p>
+</div>
+                        <div class="article-footer">
+                            <a href="/" class="back-link">← 返回首页</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        document.querySelectorAll('.article-content h2, .article-content h3').forEach((el, i) => {
+            if (!el.id) {
+                el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+            }
+        });
+    </script>
+</body>
+</html>

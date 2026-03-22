@@ -24,6 +24,7 @@
                 <a href="/categories/linux.html">Linux</a>
                 <a href="/categories/cpp.html">C++</a>
                 <a href="/categories/graphics.html">图形学</a>
+                <a href="/categories/gpu.html">GPU</a>
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
@@ -36,6 +37,7 @@
                     <li><a href="/categories/linux.html">Linux 命令</a></li>
                     <li><a href="/categories/cpp.html">C++ 知识</a></li>
                     <li><a href="/categories/graphics.html">图形学</a></li>
+                    <li><a href="/categories/gpu.html">GPU</a></li>
                 </ul>
             </div>
             <div class="sidebar-section">
@@ -45,15 +47,17 @@
         </aside>
         <main class="main">
             <div class="content">
-                <article>
-                    <div class="article-header">
-                        <h1 class="article-title">Linux进程管理命令详解</h1>
-                        <div class="article-meta">
-                            <span>2024-03-22</span>
-                            <span>Linux</span>
+                <div class="article-wrapper">
+                    <div class="toc-container"><div class="toc-title">目录</div><ul class="toc-list"><li><a href="#1-ps-查看进程状态">1. ps - 查看进程状态</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#输出字段说明">输出字段说明</a></li><li><a href="#进程状态说明">进程状态说明</a></li></ul></li><li><a href="#2-top-实时监控系统进程">2. top - 实时监控系统进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#top-交互命令">top 交互命令</a></li><li><a href="#top-界面说明">top 界面说明</a></li></ul></li><li><a href="#3-htop-增强版进程查看器">3. htop - 增强版进程查看器</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li><li><a href="#htop-交互操作">htop 交互操作</a></li></ul></li><li><a href="#4-kill-终止进程">4. kill - 终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用信号">常用信号</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#5-killall-按名称终止进程">5. killall - 按名称终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#6-pkill-按名称查找并终止进程">6. pkill - 按名称查找并终止进程</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#7-nice-renice-调整进程优先级">7. nice/renice - 调整进程优先级</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#优先级范围">优先级范围</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#8-nohup-后台运行程序">8. nohup - 后台运行程序</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#9-jobs-查看后台任务">9. jobs - 查看后台任务</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用参数">常用参数</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#10-lsof-查看进程打开的文件">10. lsof - 查看进程打开的文件</a><ul><li><a href="#命令基本信息">命令基本信息</a></li><li><a href="#常用示例">常用示例</a></li></ul></li><li><a href="#总结">总结</a></li></ul></div>
+                    <article class="article-main">
+                        <div class="article-header">
+                            <h1 class="article-title">Linux进程管理命令详解</h1>
+                            <div class="article-meta">
+                                <span>2024-03-22</span>
+                                <span>Linux</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="article-content"><h1>Linux进程管理命令详解</h1>
+                        <div class="article-content"><h1>Linux进程管理命令详解</h1>
 <p>进程管理是Linux系统管理的核心技能，本文详细介绍常用的进程管理命令。</p>
 <h2>1. ps - 查看进程状态</h2>
 <h3>命令基本信息</h3>
@@ -630,10 +634,11 @@ lsof -i -N
 <li><strong>排查问题</strong>: 使用 lsof 分析文件和网络问题</li>
 </ol>
 </div>
-                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <a href="/" style="color: var(--accent-blue);">← 返回首页</a>
-                    </div>
-                </article>
+                        <div class="article-footer">
+                            <a href="/" class="back-link">← 返回首页</a>
+                        </div>
+                    </article>
+                </div>
             </div>
         </main>
     </div>
@@ -656,6 +661,12 @@ lsof -i -N
         }
         const saved = localStorage.getItem('theme');
         document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        document.querySelectorAll('.article-content h2, .article-content h3').forEach((el, i) => {
+            if (!el.id) {
+                el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+            }
+        });
     </script>
 </body>
 </html>

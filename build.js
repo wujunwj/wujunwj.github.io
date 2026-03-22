@@ -20,12 +20,35 @@ function readTemplate(name) {
   return fs.readFileSync(path.join(__dirname, 'src', 'layouts', `${name}.html`), 'utf8');
 }
 
+function extractToc(markdownBody) {
+  const headings = [];
+  const lines = markdownBody.split('\n');
+  let currentH2 = null;
+  
+  for (const line of lines) {
+    const h2Match = line.match(/^## (.+)/);
+    const h3Match = line.match(/^### (.+)/);
+    
+    if (h2Match) {
+      const id = h2Match[1].toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+      currentH2 = { title: h2Match[1], id, children: [] };
+      headings.push(currentH2);
+    } else if (h3Match && currentH2) {
+      const id = h3Match[1].toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
+      currentH2.children.push({ title: h3Match[1], id });
+    }
+  }
+  return headings;
+}
+
 function processMarkdown(mdPath) {
   const content = fs.readFileSync(mdPath, 'utf8');
   const { attributes, body } = frontmatter(content);
+  const toc = extractToc(body);
   return {
     frontmatter: attributes,
     content: marked(body),
+    toc: toc,
     slug: path.basename(mdPath, '.md')
   };
 }
@@ -55,13 +78,32 @@ function build() {
     const outDir = path.join(outputDir, 'posts');
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
     
+    function buildTocHtml(toc) {
+      if (!toc || toc.length === 0) return '';
+      let html = '<div class="toc-container"><div class="toc-title">目录</div><ul class="toc-list">';
+      for (const item of toc) {
+        html += `<li><a href="#${item.id}">${item.title}</a>`;
+        if (item.children && item.children.length > 0) {
+          html += '<ul>';
+          for (const child of item.children) {
+            html += `<li><a href="#${child.id}">${child.title}</a></li>`;
+          }
+          html += '</ul>';
+        }
+        html += '</li>';
+      }
+      html += '</ul></div>';
+      return html;
+    }
+
     const html = readTemplate('post')
       .replace(/\{\{title\}\}/g, post.frontmatter.title || '')
       .replace(/\{\{date\}\}/g, post.frontmatter.date || '')
       .replace(/\{\{category\}\}/g, post.frontmatter.category || '')
       .replace(/\{\{content\}\}/g, post.content)
       .replace(/\{\{excerpt\}\}/g, post.frontmatter.excerpt || '')
-      .replace(/\{\{recent-posts\}\}/g, '');
+      .replace(/\{\{recent-posts\}\}/g, '')
+      .replace(/\{\{toc\}\}/g, buildTocHtml(post.toc));
     
     fs.writeFileSync(path.join(outDir, `${post.slug}.html`), html);
     console.log(`✓ ${post.frontmatter.title}`);
