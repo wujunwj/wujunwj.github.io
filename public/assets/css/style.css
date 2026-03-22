@@ -219,58 +219,56 @@ body {
 /* Article - Post Layout */
 .post-layout {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     align-items: flex-start;
 }
 
 .toc-sidebar {
-    width: 200px;
+    width: 160px;
     flex-shrink: 0;
 }
 
 .toc-sticky {
     position: sticky;
-    top: calc(var(--header-height) + 20px);
-    max-height: calc(100vh - var(--header-height) - 40px);
+    top: calc(var(--header-height) + 16px);
+    max-height: calc(100vh - var(--header-height) - 32px);
     overflow-y: auto;
 }
 
 .toc-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 8px;
 }
 
 .toc-list {
     list-style: none;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
-.toc-list li { margin-bottom: 6px; }
+.toc-list li { margin-bottom: 3px; }
 
 .toc-list ul {
-    margin-left: 12px;
-    margin-top: 4px;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 
 .toc-list a {
     color: var(--text-secondary);
     text-decoration: none;
-    padding: 3px 0;
+    padding: 2px 4px;
     display: block;
-    border-left: 2px solid transparent;
-    padding-left: 8px;
-    transition: all 0.2s;
+    border-radius: 3px;
+    transition: all 0.15s;
 }
 
 .toc-list a:hover {
     color: var(--accent-blue);
-    border-left-color: var(--accent-blue);
+    background: var(--bg-secondary);
 }
 
 .post-content {
