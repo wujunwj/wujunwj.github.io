@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechBlog - 技术博客</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/" class="active">首页</a>
+                <a href="/categories/linux.html">Linux</a>
+                <a href="/categories/cpp.html">C++</a>
+                <a href="/categories/graphics.html">图形学</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <li><a href="/categories/linux.html">Linux 命令</a></li>
+                    <li><a href="/categories/cpp.html">C++ 知识</a></li>
+                    <li><a href="/categories/graphics.html">图形学</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"><li><a href="/posts/linux-file-commands.html">Linux文件操作命令详解</a></li>
+<li><a href="/posts/linux-network-commands.html">Linux网络命令详解</a></li>
+<li><a href="/posts/linux-process-commands.html">Linux进程管理命令详解</a></li>
+<li><a href="/posts/linux-text-commands.html">Linux文本处理命令详解</a></li></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content">
+                <div class="hero">
+                    <h1 class="hero-title">TechBlog</h1>
+                    <p class="hero-subtitle">探索 Linux、C++ 与图形学的技术世界</p>
+                </div>
+                <h2 style="margin-bottom: 14px; font-size: 18px;">专栏</h2>
+                <div class="categories-grid">
+                    <a href="/categories/linux.html" class="category-card">
+                        <h3>Linux 命令</h3>
+                        <p>Linux 常用命令、系统管理</p>
+                    </a>
+                    <a href="/categories/cpp.html" class="category-card">
+                        <h3>C++ 知识</h3>
+                        <p>C++ 基础与进阶特性</p>
+                    </a>
+                    <a href="/categories/graphics.html" class="category-card">
+                        <h3>图形学</h3>
+                        <p>渲染技术与图形管线</p>
+                    </a>
+                </div>
+                <h2 style="margin: 28px 0 14px; font-size: 18px;">最新文章</h2>
+                <div class="posts-list">
+    <a href="/posts/linux-file-commands.html" class="post-item">
+      <h3>Linux文件操作命令详解</h3>
+      <div class="meta"><span>2024-03-22</span><span>Linux</span></div>
+      <p class="excerpt">详细介绍Linux中文件操作相关的命令，包括ls、cd、cp、mv、rm、mkdir等命令的参数和使用方法。</p>
+    </a>
+
+    <a href="/posts/linux-network-commands.html" class="post-item">
+      <h3>Linux网络命令详解</h3>
+      <div class="meta"><span>2024-03-22</span><span>Linux</span></div>
+      <p class="excerpt">详细介绍Linux中网络相关的命令，包括ping、curl、wget、ssh、scp、netstat、ss等命令的参数和使用方法。</p>
+    </a>
+
+    <a href="/posts/linux-process-commands.html" class="post-item">
+      <h3>Linux进程管理命令详解</h3>
+      <div class="meta"><span>2024-03-22</span><span>Linux</span></div>
+      <p class="excerpt">详细介绍Linux中进程管理相关的命令，包括ps、top、kill、nice、renice等命令的参数和使用方法。</p>
+    </a>
+
+    <a href="/posts/linux-text-commands.html" class="post-item">
+      <h3>Linux文本处理命令详解</h3>
+      <div class="meta"><span>2024-03-22</span><span>Linux</span></div>
+      <p class="excerpt">详细介绍Linux中文本处理相关的命令，包括grep、sed、awk、cut、sort、uniq等命令的参数和使用方法。</p>
+    </a></div>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+    </script>
+</body>
+</html>
