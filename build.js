@@ -79,8 +79,8 @@ function build() {
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
     
     function buildTocHtml(toc) {
-      if (!toc || toc.length === 0) return '';
-      let html = '<div class="toc-container"><div class="toc-title">目录</div><ul class="toc-list">';
+      if (!toc || toc.length === 0) return '<li><span style="color: var(--text-muted); font-size: 12px;">暂无目录</span></li>';
+      let html = '';
       for (const item of toc) {
         html += `<li><a href="#${item.id}">${item.title}</a>`;
         if (item.children && item.children.length > 0) {
@@ -92,7 +92,6 @@ function build() {
         }
         html += '</li>';
       }
-      html += '</ul></div>';
       return html;
     }
 

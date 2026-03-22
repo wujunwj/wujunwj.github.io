@@ -16,7 +16,6 @@
     --font-mono: "SFMono-Regular", Consolas, monospace;
     --sidebar-width: 220px;
     --header-height: 52px;
-    --toc-width: 220px;
 }
 
 [data-theme="dark"] {
@@ -218,56 +217,22 @@ body {
 .post-item .excerpt { color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
 
 /* Article */
-.article-wrapper {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-}
+.article { max-width: 800px; }
 
-.toc-container {
-    width: var(--toc-width);
-    flex-shrink: 0;
-    position: sticky;
-    top: calc(var(--header-height) + 20px);
-    max-height: calc(100vh - var(--header-height) - 40px);
-    overflow-y: auto;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 12px;
-}
-
-.toc-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-}
-
-.toc-list, .toc-list ul { list-style: none; }
-.toc-list { font-size: 13px; }
-
-.toc-list > li { margin-bottom: 4px; }
-.toc-list ul { margin-left: 12px; margin-top: 3px; }
-
-.toc-list a {
+/* TOC in sidebar */
+.toc-nav ul { margin-left: 12px; margin-top: 3px; }
+.toc-nav a {
     color: var(--text-secondary);
     text-decoration: none;
-    padding: 3px 0;
+    padding: 3px 6px;
     display: block;
-    border-left: 2px solid transparent;
-    padding-left: 8px;
     transition: all 0.2s;
 }
-
-.toc-list a:hover {
+.toc-nav a:hover {
     color: var(--accent-blue);
-    border-left-color: var(--accent-blue);
+    background: var(--bg-tertiary);
+    border-radius: 4px;
 }
-
-.article-main { flex: 1; min-width: 0; }
 
 .article-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
 
@@ -338,10 +303,6 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-    .toc-container { display: none; }
-}
-
 @media (max-width: 768px) {
     :root { --sidebar-width: 0; }
     .sidebar { display: none; }
@@ -350,7 +311,6 @@ body {
     .categories-grid { grid-template-columns: repeat(2, 1fr); }
     .hero-title { font-size: 22px; }
     .article-title { font-size: 18px; }
-    .article-wrapper { flex-direction: column; }
 }
 
 /* Scrollbar */

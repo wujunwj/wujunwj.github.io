@@ -41,28 +41,31 @@
                 </ul>
             </div>
             <div class="sidebar-section">
+                <div class="sidebar-title">文章目录</div>
+                <ul class="sidebar-nav toc-nav" id="tocNav">
+                    {{toc}}
+                </ul>
+            </div>
+            <div class="sidebar-section">
                 <div class="sidebar-title">最近文章</div>
                 <ul class="sidebar-nav">{{recent-posts}}</ul>
             </div>
         </aside>
         <main class="main">
             <div class="content">
-                <div class="article-wrapper">
-                    {{toc}}
-                    <article class="article-main">
-                        <div class="article-header">
-                            <h1 class="article-title">{{title}}</h1>
-                            <div class="article-meta">
-                                <span>{{date}}</span>
-                                <span>{{category}}</span>
-                            </div>
+                <article class="article">
+                    <div class="article-header">
+                        <h1 class="article-title">{{title}}</h1>
+                        <div class="article-meta">
+                            <span>{{date}}</span>
+                            <span>{{category}}</span>
                         </div>
-                        <div class="article-content">{{content}}</div>
-                        <div class="article-footer">
-                            <a href="/" class="back-link">← 返回首页</a>
-                        </div>
-                    </article>
-                </div>
+                    </div>
+                    <div class="article-content">{{content}}</div>
+                    <div class="article-footer">
+                        <a href="/" class="back-link">← 返回首页</a>
+                    </div>
+                </article>
             </div>
         </main>
     </div>
@@ -86,11 +89,24 @@
         const saved = localStorage.getItem('theme');
         document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        document.querySelectorAll('.article-content h2, .article-content h3').forEach((el, i) => {
+        document.querySelectorAll('.article-content h2, .article-content h3').forEach((el) => {
             if (!el.id) {
                 el.id = el.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-');
             }
         });
+
+        const tocNav = document.getElementById('tocNav');
+        if (tocNav) {
+            tocNav.querySelectorAll('a').forEach(a => {
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(a.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>
