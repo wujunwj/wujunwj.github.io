@@ -36,8 +36,15 @@ function extractToc(markdownBody) {
   const lines = markdownBody.split('\n');
   let currentH2 = null;
   let inCodeBlock = false;
-  let h2Index = 0;
-  let h3Index = 0;
+  let idCounter = {};
+  
+  function getId(slug) {
+    if (!idCounter[slug]) {
+      idCounter[slug] = 1;
+      return slug;
+    }
+    return slug + '-' + (++idCounter[slug]);
+  }
   
   for (const line of lines) {
     if (line.match(/^```/)) {
@@ -50,14 +57,13 @@ function extractToc(markdownBody) {
     const h3Match = line.match(/^### (.+)/);
     
     if (h2Match) {
-      h2Index++;
-      h3Index = 0;
-      const id = slugify(h2Match[1]) + '-' + h2Index;
+      const slug = slugify(h2Match[1]);
+      const id = getId(slug);
       currentH2 = { title: h2Match[1], id, level: 2, children: [] };
       headings.push(currentH2);
     } else if (h3Match && currentH2) {
-      h3Index++;
-      const id = slugify(h3Match[1]) + '-' + h2Index + '-' + h3Index;
+      const slug = slugify(h3Match[1]);
+      const id = getId(slug);
       currentH2.children.push({ title: h3Match[1], id, level: 3 });
     }
   }
