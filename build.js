@@ -115,17 +115,17 @@ function build() {
       if (!toc || toc.length === 0) return '<li><span style="color: var(--text-muted); font-size: 12px;">暂无目录</span></li>';
       let html = '';
       for (const item of toc) {
-        const levelClass = item.level === 1 ? 'toc-h1' : (item.level === 2 ? 'toc-h2' : 'toc-h3');
+        const levelClass = item.level === 1 ? 'article-toc-h1' : (item.level === 2 ? 'article-toc-h2' : 'article-toc-h3');
         html += `<li class="${levelClass}"><a href="#${item.id}">${item.title}</a>`;
         if (item.children && item.children.length > 0) {
           html += '<ul>';
           for (const child of item.children) {
-            const childLevelClass = child.level === 1 ? 'toc-h1' : (child.level === 2 ? 'toc-h2' : 'toc-h3');
+            const childLevelClass = child.level === 1 ? 'article-toc-h1' : (child.level === 2 ? 'article-toc-h2' : 'article-toc-h3');
             html += `<li class="${childLevelClass}"><a href="#${child.id}">${child.title}</a>`;
             if (child.children && child.children.length > 0) {
               html += '<ul>';
               for (const grandchild of child.children) {
-                html += `<li class="toc-h3"><a href="#${grandchild.id}">${grandchild.title}</a></li>`;
+                html += `<li class="article-toc-h3"><a href="#${grandchild.id}">${grandchild.title}</a></li>`;
               }
               html += '</ul>';
             }

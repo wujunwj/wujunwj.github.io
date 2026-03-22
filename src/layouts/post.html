@@ -44,13 +44,13 @@
                 <div class="sidebar-title">最近文章</div>
                 <ul class="sidebar-nav">{{recent-posts}}</ul>
             </div>
-            <div class="sidebar-section sidebar-toc">
-                <div class="toc-title">目录</div>
-                <ul class="toc-list">{{toc}}</ul>
-            </div>
         </aside>
         <main class="main">
             <div class="content post-layout">
+                <div class="article-toc">
+                    <div class="article-toc-title">目录</div>
+                    <ul class="article-toc-list">{{toc}}</ul>
+                </div>
                 <article class="post-content">
                     <div class="article-header">
                         <h1 class="article-title">{{title}}</h1>
@@ -91,32 +91,30 @@
             return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
         }
         
-        document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3').forEach((el) => {
+        document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3').forEach((el, index) => {
             if (!el.id) {
-                el.id = slugify(el.textContent);
+                el.id = slugify(el.textContent) + '-' + index;
             }
         });
 
-        document.querySelectorAll('.toc-list a').forEach(a => {
+        document.querySelectorAll('.article-toc-list a').forEach(a => {
             a.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    document.querySelectorAll('.toc-list a').forEach(link => link.classList.remove('active'));
-                    a.classList.add('active');
                 }
             });
         });
 
         const headings = document.querySelectorAll('.article-body h1, .article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.toc-list a');
+        const tocLinks = document.querySelectorAll('.article-toc-list a');
         
         function updateActiveHeading() {
             let current = '';
             headings.forEach(heading => {
                 const rect = heading.getBoundingClientRect();
-                if (rect.top <= 150) {
+                if (rect.top <= 120) {
                     current = heading.id;
                 }
             });
