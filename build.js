@@ -148,12 +148,12 @@ function build() {
   });
 
   const categoryNavHtml = Object.keys(categories).map(cat => {
-    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    const safeName = cat.replace(/[^\w\u4e00-\u9fa5]/g, '-').toLowerCase().replace(/-+/g, '-').replace(/^-|-$/g, '');
     return `<a href="/categories/${safeName}.html">${cat}</a>`;
   }).join('\n');
 
   const categoryCardsHtml = Object.keys(categories).map(cat => {
-    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    const safeName = cat.replace(/[^\w\u4e00-\u9fa5]/g, '-').toLowerCase().replace(/-+/g, '-').replace(/^-|-$/g, '');
     const count = categories[cat].length;
     return `<a href="/categories/${safeName}.html" class="category-card">
       <h3>${cat}</h3>
@@ -229,7 +229,7 @@ function build() {
       .replace(/\{\{recent-posts\}\}/g, recentPosts)
       .replace(/\{\{category-nav\}\}/g, categoryNavHtml);
 
-    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    const safeName = cat.replace(/[^\w\u4e00-\u9fa5]/g, '-').toLowerCase().replace(/-+/g, '-').replace(/^-|-$/g, '');
     fs.writeFileSync(path.join(catDir, `${safeName}.html`), html);
   }
 
