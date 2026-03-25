@@ -140,6 +140,27 @@ function build() {
 
   const recentPosts = posts.slice(0, 5).map(p => `<li><a href="/posts/${p.slug}.html">${p.frontmatter.title}</a></li>`).join('\n');
 
+  const categories = {};
+  posts.forEach(p => {
+    const cat = p.category || '未分类';
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(p);
+  });
+
+  const categoryNavHtml = Object.keys(categories).map(cat => {
+    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    return `<a href="/categories/${safeName}.html">${cat}</a>`;
+  }).join('\n');
+
+  const categoryCardsHtml = Object.keys(categories).map(cat => {
+    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    const count = categories[cat].length;
+    return `<a href="/categories/${safeName}.html" class="category-card">
+      <h3>${cat}</h3>
+      <p>${count} 篇文章</p>
+    </a>`;
+  }).join('\n');
+
   for (const post of posts) {
     const outDir = path.join(outputDir, 'posts');
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
@@ -165,11 +186,12 @@ function build() {
     const html = readTemplate('post')
       .replace(/\{\{title\}\}/g, post.frontmatter.title || '')
       .replace(/\{date\}/g, post.frontmatter.date || '')
-      .replace(/\{\{category\}\}/g, post.frontmatter.category || '')
+      .replace(/\{\{category\}\}/g, post.category || '')
       .replace(/\{\{content\}\}/g, post.content)
       .replace(/\{\{excerpt\}\}/g, post.frontmatter.excerpt || '')
       .replace(/\{\{recent-posts\}\}/g, recentPosts)
-      .replace(/\{\{toc\}\}/g, buildTocHtml(post.toc));
+      .replace(/\{\{toc\}\}/g, buildTocHtml(post.toc))
+      .replace(/\{\{category-nav\}\}/g, categoryNavHtml);
     
     fs.writeFileSync(path.join(outDir, `${post.slug}.html`), html);
     console.log(`✓ ${post.frontmatter.title}`);
@@ -181,27 +203,6 @@ function build() {
       <div class="meta"><span>${p.frontmatter.date}</span><span>${p.category}</span></div>
       <p class="excerpt">${p.frontmatter.excerpt || ''}</p>
     </a>`).join('\n');
-
-  const categories = {};
-  posts.forEach(p => {
-    const cat = p.category || '未分类';
-    if (!categories[cat]) categories[cat] = [];
-    categories[cat].push(p);
-  });
-
-  const categoryNavHtml = Object.keys(categories).map(cat => {
-    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
-    return `<a href="/categories/${safeName}.html">${cat}</a>`;
-  }).join('\n');
-
-  const categoryCardsHtml = Object.keys(categories).map(cat => {
-    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
-    const count = categories[cat].length;
-    return `<a href="/categories/${safeName}.html" class="category-card">
-      <h3>${cat}</h3>
-      <p>${count} 篇文章</p>
-    </a>`;
-  }).join('\n');
 
   const indexHtml = readTemplate('index')
     .replace(/\{\{posts\}\}/g, postsHtml)
@@ -225,7 +226,8 @@ function build() {
     const html = readTemplate('base')
       .replace(/\{\{title\}\}/g, `${cat} - TechBlog`)
       .replace(/\{\{content\}\}/g, `<div class="hero"><h1 class="hero-title">${cat}</h1><p class="hero-subtitle">${catPosts.length} 篇文章</p></div><div class="posts-list">${catHtml}</div>`)
-      .replace(/\{\{recent-posts\}\}/g, recentPosts);
+      .replace(/\{\{recent-posts\}\}/g, recentPosts)
+      .replace(/\{\{category-nav\}\}/g, categoryNavHtml);
 
     const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
     fs.writeFileSync(path.join(catDir, `${safeName}.html`), html);
