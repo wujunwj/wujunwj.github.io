@@ -18,10 +18,7 @@
             <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
             <nav class="header-nav">
                 <a href="/" class="active">首页</a>
-                <a href="/categories/linux.html">Linux</a>
-                <a href="/categories/cpp.html">C++</a>
-                <a href="/categories/graphics.html">图形学</a>
-                <a href="/categories/gpu.html">GPU</a>
+                {{category-nav}}
             </nav>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
@@ -31,10 +28,7 @@
             <div class="sidebar-section">
                 <div class="sidebar-title">专栏</div>
                 <ul class="sidebar-nav">
-                    <li><a href="/categories/linux.html">Linux 命令</a></li>
-                    <li><a href="/categories/cpp.html">C++ 知识</a></li>
-                    <li><a href="/categories/graphics.html">图形学</a></li>
-                    <li><a href="/categories/gpu.html">GPU</a></li>
+                    {{category-nav}}
                 </ul>
             </div>
             <div class="sidebar-section">
@@ -50,22 +44,7 @@
                 </div>
                 <h2 style="margin-bottom: 10px; font-size: 15px;">专栏</h2>
                 <div class="categories-grid">
-                    <a href="/categories/linux.html" class="category-card">
-                        <h3>Linux 命令</h3>
-                        <p>Linux 常用命令、系统管理</p>
-                    </a>
-                    <a href="/categories/cpp.html" class="category-card">
-                        <h3>C++ 知识</h3>
-                        <p>C++ 基础与进阶特性</p>
-                    </a>
-                    <a href="/categories/graphics.html" class="category-card">
-                        <h3>图形学</h3>
-                        <p>渲染技术与图形管线</p>
-                    </a>
-                    <a href="/categories/gpu.html" class="category-card">
-                        <h3>GPU</h3>
-                        <p>显卡算力与架构对比</p>
-                    </a>
+                    {{category-cards}}
                 </div>
                 <h2 style="margin: 16px 0 10px; font-size: 15px;">最新文章</h2>
                 <div class="posts-list">{{posts}}</div>

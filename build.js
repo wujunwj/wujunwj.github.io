@@ -82,12 +82,35 @@ function processMarkdown(mdPath) {
   const content = fs.readFileSync(mdPath, 'utf8');
   const { attributes, body } = frontmatter(content);
   const toc = extractToc(body);
+  
+  const relPath = path.relative(path.join(__dirname, 'content', 'posts'), mdPath);
+  const parts = relPath.split(path.sep);
+  let category = attributes.category;
+  if (!category && parts.length > 1) {
+    category = parts[0];
+  }
+  
   return {
-    frontmatter: attributes,
+    frontmatter: { ...attributes, category },
     content: marked(body),
     toc: toc,
-    slug: path.basename(mdPath, '.md')
+    slug: path.basename(mdPath, '.md'),
+    category: category || '未分类'
   };
+}
+
+function getAllMdFiles(dir) {
+  const files = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...getAllMdFiles(fullPath));
+    } else if (entry.name.endsWith('.md')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
 }
 
 function build() {
@@ -104,7 +127,7 @@ function build() {
   if (fs.existsSync(outputDir)) fs.rmSync(outputDir, { recursive: true });
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const mdFiles = fs.readdirSync(contentDir).filter(f => f.endsWith('.md')).map(f => path.join(contentDir, f));
+  const mdFiles = getAllMdFiles(contentDir);
   console.log(`找到 ${mdFiles.length} 篇文章`);
 
   const posts = [];
@@ -155,22 +178,38 @@ function build() {
   const postsHtml = posts.map(p => `
     <a href="/posts/${p.slug}.html" class="post-item">
       <h3>${p.frontmatter.title}</h3>
-      <div class="meta"><span>${p.frontmatter.date}</span><span>${p.frontmatter.category}</span></div>
+      <div class="meta"><span>${p.frontmatter.date}</span><span>${p.category}</span></div>
       <p class="excerpt">${p.frontmatter.excerpt || ''}</p>
     </a>`).join('\n');
 
-  const indexHtml = readTemplate('index')
-    .replace(/\{\{posts\}\}/g, postsHtml)
-    .replace(/\{\{recent-posts\}\}/g, recentPosts);
-
-  fs.writeFileSync(path.join(outputDir, 'index.html'), indexHtml);
-
   const categories = {};
   posts.forEach(p => {
-    const cat = p.frontmatter.category || '未分类';
+    const cat = p.category || '未分类';
     if (!categories[cat]) categories[cat] = [];
     categories[cat].push(p);
   });
+
+  const categoryNavHtml = Object.keys(categories).map(cat => {
+    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    return `<a href="/categories/${safeName}.html">${cat}</a>`;
+  }).join('\n');
+
+  const categoryCardsHtml = Object.keys(categories).map(cat => {
+    const safeName = cat.replace(/[^\w]/g, '-').toLowerCase();
+    const count = categories[cat].length;
+    return `<a href="/categories/${safeName}.html" class="category-card">
+      <h3>${cat}</h3>
+      <p>${count} 篇文章</p>
+    </a>`;
+  }).join('\n');
+
+  const indexHtml = readTemplate('index')
+    .replace(/\{\{posts\}\}/g, postsHtml)
+    .replace(/\{\{recent-posts\}\}/g, recentPosts)
+    .replace(/\{\{category-nav\}\}/g, categoryNavHtml)
+    .replace(/\{\{category-cards\}\}/g, categoryCardsHtml);
+
+  fs.writeFileSync(path.join(outputDir, 'index.html'), indexHtml);
 
   for (const [cat, catPosts] of Object.entries(categories)) {
     const catDir = path.join(outputDir, 'categories');
