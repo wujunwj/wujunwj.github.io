@@ -20,8 +20,6 @@ npm run serve
 
 ### 3. 一键部署
 
-修改文章后，执行以下命令即可自动构建并推送到 GitHub：
-
 ```bash
 npm run deploy
 ```
@@ -31,16 +29,33 @@ npm run deploy
 ```
 tech-blog/
 ├── content/
-│   └── posts/          # Markdown 文章目录
+│   └── posts/          # Markdown 文章目录（支持子文件夹分类）
 ├── src/
 │   ├── layouts/        # HTML 模板
 │   └── assets/         # 静态资源（CSS、图片等）
-├── public/            # 构建输出目录（自动生成）
 ├── build.js           # 构建脚本
-└── deploy.sh          # 一键部署脚本
+├── deploy.sh          # 一键部署脚本
+└── package.json
 ```
 
-## 文章格式
+## 专栏与文章
+
+### 添加新专栏
+
+在 `content/posts/` 下创建文件夹，文件夹名即为专栏名：
+
+```
+content/posts/
+├── Linux/           → Linux 专栏
+│   ├── linux-file-commands.md
+│   └── linux-network-commands.md
+├── GPU/             → GPU 专栏
+│   └── gpu-comparison-2025.md
+└── 显示基础/        → 显示基础专栏
+    └── DDIC-RAM.md
+```
+
+### 文章格式
 
 每篇文章放在 `content/posts/` 目录下，以 `.md` 为扩展名。文件开头需要使用 YAML front matter 格式：
 
@@ -65,37 +80,15 @@ excerpt: "文章摘要，简短描述"
 |------|------|------|
 | title | 是 | 文章标题 |
 | date | 是 | 发布日期，格式：YYYY-MM-DD |
-| category | 是 | 分类名称（用于生成分类页面） |
+| category | 否 | 分类名称（默认使用文件夹名） |
 | tags | 否 | 标签数组 |
 | excerpt | 否 | 文章摘要，显示在列表页 |
 | author | 否 | 作者名称 |
 
-### 支持的分类
+## 添加/修改/删除文章
 
-当前模板支持以下分类，请使用英文名称：
-
-- `Linux` - Linux 相关文章
-- `Cpp` - C++ 相关文章
-- `Graphics` - 图形学相关文章
-
-如需添加新分类，请同时更新 `src/layouts/index.html` 中的导航链接。
-
-## 添加新文章
-
-1. 在 `content/posts/` 目录下创建新的 `.md` 文件
-2. 按照上述格式编写 front matter 和正文
-3. 执行 `npm run deploy` 部署
-
-## 修改文章
-
-1. 打开 `content/posts/` 目录下对应的 `.md` 文件
-2. 修改内容
-3. 执行 `npm run deploy` 部署
-
-## 删除文章
-
-1. 删除 `content/posts/` 目录下对应的 `.md` 文件
-2. 执行 `npm run deploy` 部署
+1. 在 `content/posts/` 目录下添加/修改/删除 `.md` 文件
+2. 执行 `npm run deploy`
 
 ## 自定义样式
 
@@ -104,29 +97,9 @@ excerpt: "文章摘要，简短描述"
 - 文章模板：`src/layouts/post.html`
 - 基础模板：`src/layouts/base.html`
 
-## 部署流程（手动）
-
-如果一键部署脚本出现问题，可以手动执行以下步骤：
-
-```bash
-# 1. 安装依赖
-npm install
-
-# 2. 构建网站
-npm run build
-
-# 3. 复制构建结果到根目录
-cp -r public/* .
-
-# 4. 提交并推送
-git add .
-git commit -m "Update blog"
-git push origin main
-```
-
 ## 注意事项
 
 - 文章文件必须放在 `content/posts/` 目录下
 - front matter 必须放在文件开头，使用 `---` 分隔
-- category 名称会自动转换（小写、特殊字符替换为 `-`）生成分类页面 URL
 - 构建时会自动按日期排序，最新的文章显示在最前面
+- 专栏自动根据子文件夹生成，无需手动配置
