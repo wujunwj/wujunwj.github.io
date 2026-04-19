@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArkUI 框架深度解析 | TechBlog</title>
+    <meta name="description" content="ArkUI 框架深度解析">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/linux.html">Linux</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/linux.html">Linux</a>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"><li><a href="/posts/ArkUI 框架深度解析.html">ArkUI 框架深度解析</a></li>
+<li><a href="/posts/git.html">Git 与 GitHub 入门指南</a></li>
+<li><a href="/posts/DDIC-RAM.html">DDIC 有无 RAM 的区别与原理深度解析</a></li>
+<li><a href="/posts/gpu-comparison-2025.html">2025年主流GPU对比分析</a></li>
+<li><a href="/posts/linux-file-commands.html">Linux文件操作命令详解</a></li></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content post-layout">
+                <div class="article-toc">
+                    <div class="article-toc-title">目录</div>
+                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-框架概览与分层架构">1. 框架概览与分层架构</a></li><li class="article-toc-h2"><a href="#2-核心节点模型-三棵树">2. 核心节点模型：三棵树</a></li><li class="article-toc-h2"><a href="#3-渲染流水线-build-measure-layout-render">3. 渲染流水线：Build → Measure → Layout → Render</a><ul><li class="article-toc-h3"><a href="#3-1-build-阶段">3.1 Build 阶段</a></li><li class="article-toc-h3"><a href="#3-2-measure-阶段">3.2 Measure 阶段</a></li><li class="article-toc-h3"><a href="#3-3-layout-阶段">3.3 Layout 阶段</a></li><li class="article-toc-h3"><a href="#3-4-render-阶段">3.4 Render 阶段</a></li></ul></li><li class="article-toc-h2"><a href="#4-状态管理与-build-触发条件">4. 状态管理与 Build 触发条件</a><ul><li class="article-toc-h3"><a href="#4-1-build-方法何时被调用">4.1 Build 方法何时被调用？</a></li><li class="article-toc-h3"><a href="#4-2-数据驱动机制">4.2 数据驱动机制</a></li><li class="article-toc-h3"><a href="#4-3-更新粒度与差分机制">4.3 更新粒度与差分机制</a></li></ul></li><li class="article-toc-h2"><a href="#5-触发子组件-build-的详细场景示例">5. 触发子组件 Build 的详细场景示例</a><ul><li class="article-toc-h3"><a href="#会触发子组件-build-的情况">✅ 会触发子组件 `build()` 的情况</a></li><li class="article-toc-h3"><a href="#不会触发子组件-build-的情况-常见误区">❌ 不会触发子组件 `build()` 的情况（常见误区）</a></li></ul></li><li class="article-toc-h2"><a href="#6-父组件尺寸变化后子组件的更新机制">6. 父组件尺寸变化后子组件的更新机制</a><ul><li class="article-toc-h3"><a href="#6-1-更新流程">6.1 更新流程</a></li><li class="article-toc-h3"><a href="#6-2-响应式布局示例">6.2 响应式布局示例</a></li><li class="article-toc-h3"><a href="#6-3-监听尺寸变化">6.3 监听尺寸变化</a></li></ul></li><li class="article-toc-h2"><a href="#7-完整渲染流程图">7. 完整渲染流程图</a></li><li class="article-toc-h2"><a href="#8-性能优化要点">8. 性能优化要点</a><ul><li class="article-toc-h3"><a href="#8-1-利用布局边界减少重算">8.1 利用布局边界减少重算</a></li><li class="article-toc-h3"><a href="#8-2-精简组件数量">8.2 精简组件数量</a></li><li class="article-toc-h3"><a href="#8-3-使用-lazyforeach-懒加载">8.3 使用 LazyForEach 懒加载</a></li><li class="article-toc-h3"><a href="#8-4-区分布局属性与样式属性">8.4 区分布局属性与样式属性</a></li><li class="article-toc-h3"><a href="#8-5-使用无状态-builder-替代-component">8.5 使用无状态 Builder 替代 @Component</a></li><li class="article-toc-h3"><a href="#8-6-数组更新最佳实践">8.6 数组更新最佳实践</a></li></ul></li><li class="article-toc-h2"><a href="#9-总结">9. 总结</a></li></ul>
+                </div>
+                <article class="post-content">
+                    <div class="article-header">
+                        <h1 class="article-title">ArkUI 框架深度解析</h1>
+                        <div class="article-meta">
+                            <span>{2026-04-19}</span>
+                            <span>ohos</span>
+                        </div>
+                    </div>
+                    <div class="article-body"><h1 id="arkui-框架深度解析-架构-渲染流程与状态驱动机制">ArkUI 框架深度解析：架构、渲染流程与状态驱动机制</h1><h2 id="1-框架概览与分层架构">1. 框架概览与分层架构</h2><p>ArkUI 是 OpenHarmony 生态中核心的 UI 渲染框架，采用声明式开发范式。开发者通过 ArkTS 语言描述界面，框架负责组件树构建、布局测量、渲染绘制及事件处理。整个框架可划分为三个核心层次：</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    声明层 (ArkTS API)                    │
+│  @State / @Prop / @Link 等装饰器，开发者编写声明式 UI    │
+├─────────────────────────────────────────────────────────┤
+│                    中间层 (组件树与差分更新)              │
+│  Component 树 → Element 树 → FrameNode 树 → RSNode 树   │
+│  状态管理、脏标记系统、差异计算、布局测量调度             │
+├─────────────────────────────────────────────────────────┤
+│                    渲染层 (Native 渲染管线)              │
+│  RenderService 进程：指令录制、GPU 合成、屏幕显示        │
+└─────────────────────────────────────────────────────────┘
+</code></pre>
+<ul>
+<li><strong>声明层</strong>：开发者使用 ArkTS 语言配合状态装饰器（<code>@State</code>、<code>@Prop</code>、<code>@Link</code> 等）描述 UI 结构，<code>build()</code> 方法定义了组件树的静态描述。</li>
+<li><strong>中间层</strong>：框架将声明式的 UI 描述转换为内部的组件树，并在状态变更时执行差分更新算法，标记脏节点，决定哪些部分需要重新测量、布局或绘制。核心代码位于 <code>foundation/arkui</code> 的 C++ AceEngine 中。</li>
+<li><strong>渲染层</strong>：将更新后的节点树转换为平台原生绘制指令，通过 IPC 提交给 RenderService 进程进行 GPU 合成并最终上屏。</li>
+</ul>
+<h2 id="2-核心节点模型-三棵树">2. 核心节点模型：三棵树</h2><p>ArkUI 底层维护了三棵关键的树形结构，以实现高效的声明式 UI 更新：</p>
+<table>
+<thead>
+<tr>
+<th align="left">树结构</th>
+<th align="left">作用</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Component 树</strong></td>
+<td align="left">前端 UI 组件的映射</td>
+<td align="left">每个 UI 组件对应一个 Component 对象，描述组件的配置信息</td>
+</tr>
+<tr>
+<td align="left"><strong>Element 树</strong></td>
+<td align="left">维护组件的树形结构和更新状态</td>
+<td align="left">由 Component 生成，管理组件生命周期和状态依赖关系</td>
+</tr>
+<tr>
+<td align="left"><strong>FrameNode 树</strong></td>
+<td align="left">UI 描述的数据结构，生成渲染树</td>
+<td align="left">负责测量、布局、属性计算，是 UI 树的“骨架”</td>
+</tr>
+<tr>
+<td align="left"><strong>RSNode 树</strong></td>
+<td align="left">录制渲染命令</td>
+<td align="left">将绘制指令 IPC 发送至 RenderService 进程完成绘制</td>
+</tr>
+</tbody></table>
+<p>编译期间，装饰器修饰的 UI 组件树被解构成 <code>ViewPU</code> 树；运行时响应 Vsync 信号，进一步构建 FrameNode 树和 RSNode 树。</p>
+<h2 id="3-渲染流水线-build-measure-layout-render">3. 渲染流水线：Build → Measure → Layout → Render</h2><p>一次完整的 UI 更新需经历以下四个阶段：</p>
+<pre><code>状态变更 (State Change)
+      ↓
+【Build】执行组件创建和组件标脏
+      ↓
+【Measure】对组件的宽高进行测量
+      ↓
+【Layout】在屏幕上确定元素的位置
+      ↓
+【Render】提交绘制指令
+      ↓
+屏幕显示
+</code></pre>
+<h3 id="3-1-build-阶段">3.1 Build 阶段</h3><p>Build 是执行组件创建和组件标脏的过程。当状态变量（如 <code>@State</code> 修饰的数据）发生变化时，框架会调用所在组件的 <code>build()</code> 方法。</p>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li><code>build()</code> 方法并不直接绘制 UI，而是<strong>根据当前状态描述 UI 应该是什么样子</strong>。</li>
+<li>框架会将新旧 UI 描述进行对比，仅对发生变化的属性进行标脏，为后续的测量布局做准备。</li>
+</ul>
+<h3 id="3-2-measure-阶段">3.2 Measure 阶段</h3><p>Measure 是对组件宽高进行测量的阶段：</p>
+<ol>
+<li><strong>父节点传递约束</strong>：父组件将 <code>LayoutParam</code>（约束条件）传递给子组件。</li>
+<li><strong>子节点自底向上计算</strong>：子组件根据约束计算自身所需尺寸。</li>
+<li><strong>递归遍历 children</strong>：框架根据脏节点数组递归遍历子节点进行测量。若布局参数未变化，则跳过该阶段。</li>
+</ol>
+<p>在源码层面，Measure 通过 <code>RenderNode::PerformLayout()</code> 中的 <code>Measure()</code> 方法实现，最终调用 <code>SetLayoutSize()</code> 确定尺寸。</p>
+<h3 id="3-3-layout-阶段">3.3 Layout 阶段</h3><p>Layout 是对元素在屏幕上进行位置摆放的阶段。当 Measure 执行完成后，框架会根据布局算法计算出每个 RenderNode 在相对空间中的真实位置。</p>
+<p><strong>布局触发机制</strong>：节点内容变化时会标记自己为 <code>needLayout</code>，并向上标记至重绘边界（RepaintBoundary）。从重绘边界开始，父节点将 LayoutParam 传给子节点，子节点据此计算尺寸和位置。</p>
+<h3 id="3-4-render-阶段">3.4 Render 阶段</h3><p>Render 是根据测量和布局得到的大小、位置信息，提交绘制指令的过程：</p>
+<ol>
+<li>RSNode 录制绘制命令</li>
+<li>绘制命令通过 IPC 发送至 RenderService 进程</li>
+<li>Graphics 系统完成合成并上屏</li>
+</ol>
+<p>ArkUI 区分两类“脏”状态：</p>
+<table>
+<thead>
+<tr>
+<th align="left">脏类型</th>
+<th align="left">影响范围</th>
+<th align="left">处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>布局脏</strong></td>
+<td align="left">影响尺寸和位置</td>
+<td align="left">需重新测量布局，并判定影响范围</td>
+</tr>
+<tr>
+<td align="left"><strong>绘制脏</strong></td>
+<td align="left">仅影响样式（颜色、背景等）</td>
+<td align="left">重绘但不重新布局</td>
+</tr>
+</tbody></table>
+<h2 id="4-状态管理与-build-触发条件">4. 状态管理与 Build 触发条件</h2><h3 id="4-1-build-方法何时被调用">4.1 Build 方法何时被调用？</h3><p><strong>核心规则</strong>：当组件或其子组件直接依赖的状态变量发生变化时，才会触发该组件的 <code>build()</code> 方法重新执行。</p>
+<p>具体触发条件包括：</p>
+<ul>
+<li><code>@State</code> 变量变化：调用所在组件的 <code>build()</code>。</li>
+<li><code>@Prop</code> / <code>@Link</code> 变量变化：父组件关联数据变化时，子组件同步更新并触发 <code>build()</code>。</li>
+<li><code>@Provide</code> / <code>@Consume</code> 数据变化：跨层级状态共享时触发相关组件刷新。</li>
+<li><code>@ObjectLink</code> / <code>@Observed</code>：当 <code>@Observed</code> 修饰的类对象属性变化时，触发依赖该属性的组件 <code>build()</code>。</li>
+</ul>
+<h3 id="4-2-数据驱动机制">4.2 数据驱动机制</h3><p>框架在运行时维护组件树，通过装饰器实现状态观察。状态变更触发依赖收集，精准标记相关组件为脏，在布局过程中只更新需要刷新的组件，避免造成整棵组件树的重建。</p>
+<h3 id="4-3-更新粒度与差分机制">4.3 更新粒度与差分机制</h3><p>ArkUI 的更新粒度由“脏节点数组”控制。Build 过程按照组件 ID 依次更新组件设置的属性，框架通过计算新旧 UI 描述之间的差异，只对发生变化的节点执行后续的 Measure/Layout/Render 流程。</p>
+<h2 id="5-触发子组件-build-的详细场景示例">5. 触发子组件 Build 的详细场景示例</h2><h3 id="会触发子组件-code-build-code-的情况">✅ 会触发子组件 <code>build()</code> 的情况</h3><table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">会触发的组件</th>
+<th align="left">代码示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. 子组件自身的 <code>@State</code> 变量改变</strong></td>
+<td align="left">该子组件自身</td>
+<td align="left"><code>@Component struct Child { @State count = 0; build() { Text(</code>${this.count}<code>).onClick(()=&gt; this.count++) } }</code></td>
+</tr>
+<tr>
+<td align="left"><strong>2. 父组件的 <code>@State</code> 改变，子组件 <code>@Prop</code> 依赖</strong></td>
+<td align="left">该子组件</td>
+<td align="left"><code>Child({ propCount: this.parentCount })</code></td>
+</tr>
+<tr>
+<td align="left"><strong>3. 任何一端改变 <code>@Link</code> 绑定的变量</strong></td>
+<td align="left">所有绑定的父子组件</td>
+<td align="left"><code>@Link linkCount: number;</code> 且父子组件通过 <code>$</code> 语法建立双向绑定</td>
+</tr>
+<tr>
+<td align="left"><strong>4. 跨层级 <code>@Provide</code> 变量改变，后代组件 <code>@Consume</code> 依赖</strong></td>
+<td align="left">所有依赖该状态的<code>@Consume</code>组件</td>
+<td align="left">祖先组件：<code>@Provide(&quot;key&quot;) count = 0;</code> <br> 后代组件：<code>@Consume(&quot;key&quot;) count: number;</code></td>
+</tr>
+<tr>
+<td align="left"><strong>5. <code>@Observed</code> 类实例的属性改变，且被 <code>@ObjectLink</code> 引用</strong></td>
+<td align="left">引用了该实例的子组件</td>
+<td align="left"><code>@ObjectLink user: User;</code> 且 <code>User</code> 类被 <code>@Observed</code> 装饰</td>
+</tr>
+</tbody></table>
+<h3 id="不会触发子组件-code-build-code-的情况-常见误区">❌ 不会触发子组件 <code>build()</code> 的情况（常见误区）</h3><table>
+<thead>
+<tr>
+<th align="left">场景</th>
+<th align="left">说明</th>
+<th align="left">代码示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. 修改非状态变量</strong></td>
+<td align="left">只有被<code>@State</code>等装饰器修饰的变量才是响应式的。修改普通变量UI不会刷新。</td>
+<td align="left"><code>private count = 0; build() { Text(</code>${this.count}<code>).onClick(()=&gt; this.count++) // 无效！ }</code></td>
+</tr>
+<tr>
+<td align="left"><strong>2. 修改 <code>@Prop</code> 但父组件状态未变</strong></td>
+<td align="left"><code>@Prop</code>是单向传递。子组件内修改它，自身UI会变，但不会影响父组件，且若父组件因其他原因重建，子组件的修改会被覆盖。</td>
+<td align="left"><code>Child({ title: this.parentTitle })</code> 子组件内 <code>this.title = &quot;New&quot;</code> 只在本地生效。</td>
+</tr>
+<tr>
+<td align="left"><strong>3. 修改 <code>@ObjectLink</code> 变量自身（而非其属性）</strong></td>
+<td align="left"><code>@ObjectLink</code> 是只读引用，不能直接对变量本身赋值，否则运行时报错。</td>
+<td align="left"><code>this.objLink = new User()</code> ❌</td>
+</tr>
+<tr>
+<td align="left"><strong>4. 修改非 <code>@Observed</code> 类实例的属性</strong></td>
+<td align="left">对于嵌套对象，若类未被<code>@Observed</code>装饰，框架无法观测其属性变化。</td>
+<td align="left">假设<code>User</code>类无<code>@Observed</code>，修改 <code>user.name = &quot;新名字&quot;</code> 不会触发UI更新。</td>
+</tr>
+<tr>
+<td align="left"><strong>5. 直接修改数组的索引或<code>length</code>属性</strong></td>
+<td align="left">部分框架版本对此观测有限，推荐使用<code>push</code>、<code>pop</code>等能产生新引用的数组方法。</td>
+<td align="left"><code>this.arr[0] = 5</code> 可能不更新，推荐 <code>this.arr = [...this.arr]</code>。</td>
+</tr>
+<tr>
+<td align="left"><strong>6. 数据变更不触发 <code>build</code> 的刷新边界</strong></td>
+<td align="left">如果状态变量仅在未被使用的组件中更新，或框架能判断出UI无需重绘，则相关组件的 <code>build</code> 也不会执行。</td>
+<td align="left">在一个独立组件中更新其内部状态，但该状态不影响任何UI元素的属性或内容。</td>
+</tr>
+</tbody></table>
+<h2 id="6-父组件尺寸变化后子组件的更新机制">6. 父组件尺寸变化后子组件的更新机制</h2><h3 id="6-1-更新流程">6.1 更新流程</h3><p>当父组件尺寸发生变化时，子组件的更新遵循以下流程：</p>
+<ol>
+<li><strong>属性变化检测</strong>：父组件的布局属性（<code>width</code>、<code>height</code>、<code>padding</code>、<code>margin</code> 等）改变时，框架将其标记为“布局脏”。</li>
+<li><strong>布局边界查找</strong>：框架向上查找到布局边界（设置了固定宽高尺寸的组件），边界内部的布局变化不会影响外部。</li>
+<li><strong>子树更新</strong>：从布局边界开始，对受影响的子树重新测量和布局：<ul>
+<li>父节点将新的 <code>LayoutParam</code>（约束条件）传递给子节点。</li>
+<li>子节点根据新约束重新计算自身尺寸和位置。</li>
+</ul>
+</li>
+<li><strong>渲染更新</strong>：根据测量和布局得到的新大小位置信息，提交绘制指令完成渲染。</li>
+</ol>
+<h3 id="6-2-响应式布局示例">6.2 响应式布局示例</h3><p>以 <code>Grid</code> 组件为例，当网格容器组件尺寸发生变化时，所有子组件以及间距会等比例调整，实现网格布局的自适应能力。</p>
+<h3 id="6-3-监听尺寸变化">6.3 监听尺寸变化</h3><p>开发者可以通过 <code>onAreaChange</code> 事件监听组件尺寸变化，该事件会在组件由布局变化导致的尺寸/位置变化时触发。注意：由绘制变化（如 <code>translate</code>、<code>offset</code>）导致的渲染属性变化不会触发该回调。</p>
+<h2 id="7-完整渲染流程图">7. 完整渲染流程图</h2><pre><code>┌─────────────────────────────────────────────────────────────────────────────┐
+│                        ArkUI 完整渲染流程                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ArkTS 源码                                                                 │
+│      ↓                                                                      │
+│  编译期：IDE 生成 ABC 中间指令文件，打包成 HAP                                │
+│      ↓                                                                      │
+│  运行时：方舟运行时加载执行                                                    │
+│      ↓                                                                      │
+│  状态变量 (@State/@Prop/@Link) 初始化 → build() 构建 Component 树              │
+│      ↓                                                                      │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │ 首次渲染 / UI 更新时：                                                │    │
+│  │  1. Build：生成/更新组件树，属性变化则标脏                             │    │
+│  │  2. Measure：父→子传递约束，子节点自底向上计算尺寸                      │    │
+│  │  3. Layout：计算各节点最终位置                                        │    │
+│  │  4. Render：RSNode 录制绘制命令                                       │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│      ↓                                                                      │
+│  IPC 跨进程通信                                                             │
+│      ↓                                                                      │
+│  RenderService 进程：执行绘制命令、GPU 合成                                   │
+│      ↓                                                                      │
+│  屏幕显示                                                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="8-性能优化要点">8. 性能优化要点</h2><h3 id="8-1-利用布局边界减少重算">8.1 利用布局边界减少重算</h3><p>对固定尺寸的组件设置具体宽高，使其成为布局边界，限制布局变化的影响范围，避免整棵树重新布局。</p>
+<h3 id="8-2-精简组件数量">8.2 精简组件数量</h3><p>使用扁平化布局组件（如 <code>RelativeContainer</code>、<code>Grid</code>）替代多层 <code>Column</code>/<code>Row</code> 嵌套，减少中间节点数量。</p>
+<h3 id="8-3-使用-lazyforeach-懒加载">8.3 使用 LazyForEach 懒加载</h3><p>在滚动列表中，使用 <code>LazyForEach</code> 仅渲染可视区域内的项，减少一次性组件创建数量。</p>
+<h3 id="8-4-区分布局属性与样式属性">8.4 区分布局属性与样式属性</h3><ul>
+<li><strong>布局属性</strong>（<code>width</code>、<code>height</code>、<code>padding</code>、<code>margin</code>）变化会触发子树重新测量布局，成本较高。</li>
+<li><strong>样式属性</strong>（<code>color</code>、<code>backgroundColor</code>、<code>opacity</code>）仅影响自身，不会进行子树查找，成本较低。</li>
+</ul>
+<h3 id="8-5-使用无状态-builder-替代-component">8.5 使用无状态 Builder 替代 @Component</h3><p>优先使用无状态组件 <code>@Builder</code> 替代 <code>@Component</code>，减少状态依赖和更新开销。</p>
+<h3 id="8-6-数组更新最佳实践">8.6 数组更新最佳实践</h3><ul>
+<li>尽量使用返回新数组的方法（如 <code>map</code>、<code>filter</code>、<code>slice</code>、扩展运算符 <code>...</code>）。</li>
+<li>避免直接修改数组索引或 <code>length</code>，以确保状态观测的可靠性。</li>
+<li>对于 <code>@Observed</code> 类的数组属性，需结合 <code>@ObjectLink</code> 使用。</li>
+</ul>
+<h2 id="9-总结">9. 总结</h2><p>ArkUI 通过声明式开发范式、三棵树模型和精细的差分更新算法，为开发者提供了高效、稳定的 UI 开发体验。理解 Build → Measure → Layout → Render 的渲染流水线，以及状态装饰器如何触发组件更新，是编写高性能 ArkUI 应用的基础。通过合理设计组件边界、区分布局与样式属性、善用懒加载等优化手段，可以进一步提升应用的流畅度和响应速度。</p>
+</div>
+                    <div class="article-footer">
+                        <a href="/" class="back-link">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
+        var idCounter = {};
+        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.article-toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
+    </script>
+</body>
+</html>
