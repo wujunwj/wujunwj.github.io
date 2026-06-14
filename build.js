@@ -81,7 +81,8 @@ function processMarkdown(mdPath) {
   markedIdCounter = {};
   const content = fs.readFileSync(mdPath, 'utf8');
   const { attributes, body } = frontmatter(content);
-  const toc = extractToc(body);
+  const bodyWithoutFirstH1 = body.replace(/^#\s+.*\n?/, '');
+  const toc = extractToc(bodyWithoutFirstH1);
   
   const relPath = path.relative(path.join(__dirname, 'content', 'posts'), mdPath);
   const parts = relPath.split(path.sep);
@@ -92,7 +93,7 @@ function processMarkdown(mdPath) {
   
   return {
     frontmatter: { ...attributes, category },
-    content: marked(body),
+    content: marked(bodyWithoutFirstH1),
     toc: toc,
     slug: path.basename(mdPath, '.md'),
     category: category || '未分类'
