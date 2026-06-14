@@ -271,7 +271,7 @@ a:hover { color: var(--color-primary-hover); }
 .content {
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 24px 24px;
 }
 
 /* ===== Hero (Home) ===== */
@@ -422,11 +422,30 @@ a:hover { color: var(--color-primary-hover); }
   overflow: hidden;
 }
 
+/* ===== Article Page (no sidebar) ===== */
+.page-article .sidebar,
+.page-article .sidebar-overlay,
+.page-article .mobile-menu-btn {
+  display: none !important;
+}
+
+.page-article .main {
+  margin-left: 0;
+}
+
+.page-article .layout {
+  padding-top: 0;
+}
+
+.page-article .footer {
+  margin-left: 0;
+}
+
 /* ===== Post Layout (Article Page) ===== */
 .post-layout {
-  max-width: 760px;
+  max-width: 740px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 8px 24px 48px;
 }
 
 /* Post Content */
@@ -437,13 +456,12 @@ a:hover { color: var(--color-primary-hover); }
 /* Article TOC - fixed on the right */
 .article-toc {
   position: fixed;
-  top: calc(var(--header-height) + 32px);
-  right: max(16px, calc(100vw - 1240px));
-  width: 180px;
-  max-height: calc(100vh - var(--header-height) - 64px);
+  top: calc(var(--header-height) + 24px);
+  right: max(16px, calc((100vw - 740px) / 2 - 200px));
+  width: 170px;
+  max-height: calc(100vh - var(--header-height) - 48px);
   overflow-y: auto;
-  padding: 0 0 0 16px;
-  border-left: 1px solid var(--color-border-light);
+  padding: 0;
   z-index: 50;
 }
 
