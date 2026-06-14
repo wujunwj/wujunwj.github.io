@@ -170,16 +170,7 @@ function build() {
       if (!toc || toc.length === 0) return '<li><span style="color: var(--text-muted); font-size: 12px;">暂无目录</span></li>';
       let html = '';
       for (const item of toc) {
-        const levelClass = item.level === 2 ? 'article-toc-h2' : 'article-toc-h3';
-        html += `<li class="${levelClass}"><a href="#${item.id}">${item.title}</a>`;
-        if (item.children && item.children.length > 0) {
-          html += '<ul>';
-          for (const child of item.children) {
-            html += `<li class="article-toc-h3"><a href="#${child.id}">${child.title}</a></li>`;
-          }
-          html += '</ul>';
-        }
-        html += '</li>';
+        html += `<li><a href="#${item.id}">${item.title}</a></li>`;
       }
       return html;
     }

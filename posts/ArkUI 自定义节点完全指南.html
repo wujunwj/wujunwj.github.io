@@ -58,7 +58,7 @@
     <main class="main">
       <nav class="article-toc" id="articleToc">
         <div class="article-toc-title">目录</div>
-        <ul class="article-toc-list"><li class="article-toc-h2"><a href="#什么是自定义节点">什么是自定义节点？</a></li><li class="article-toc-h2"><a href="#自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</a></li><li class="article-toc-h2"><a href="#三种核心自定义节点">三种核心自定义节点</a><ul><li class="article-toc-h3"><a href="#1-framenode-全能架构师">1. FrameNode – 全能架构师</a></li><li class="article-toc-h3"><a href="#2-rendernode-专注的画师">2. RenderNode – 专注的画师</a></li><li class="article-toc-h3"><a href="#3-buildernode-高效的预制构件工厂">3. BuilderNode – 高效的预制构件工厂</a></li></ul></li><li class="article-toc-h2"><a href="#如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</a><ul><li class="article-toc-h3"><a href="#核心组件">核心组件</a></li><li class="article-toc-h3"><a href="#完整接入流程">完整接入流程</a></li><li class="article-toc-h3"><a href="#骨架示例">骨架示例</a></li></ul></li><li class="article-toc-h2"><a href="#实际案例-高性能动态画板">实际案例：高性能动态画板</a><ul><li class="article-toc-h3"><a href="#使用-buildernode-framenode-的实现思路">使用 BuilderNode + FrameNode 的实现思路</a></li></ul></li><li class="article-toc-h2"><a href="#总结-如何选择">总结：如何选择？</a></li><li class="article-toc-h2"><a href="#学习建议">学习建议</a></li></ul>
+        <ul class="article-toc-list"><li><a href="#什么是自定义节点">什么是自定义节点？</a></li><li><a href="#自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</a></li><li><a href="#三种核心自定义节点">三种核心自定义节点</a></li><li><a href="#如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</a></li><li><a href="#实际案例-高性能动态画板">实际案例：高性能动态画板</a></li><li><a href="#总结-如何选择">总结：如何选择？</a></li><li><a href="#学习建议">学习建议</a></li></ul>
       </nav>
 
       <div class="post-layout">
@@ -73,7 +73,7 @@
 
           <details class="mobile-toc">
             <summary>目录</summary>
-            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#什么是自定义节点">什么是自定义节点？</a></li><li class="article-toc-h2"><a href="#自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</a></li><li class="article-toc-h2"><a href="#三种核心自定义节点">三种核心自定义节点</a><ul><li class="article-toc-h3"><a href="#1-framenode-全能架构师">1. FrameNode – 全能架构师</a></li><li class="article-toc-h3"><a href="#2-rendernode-专注的画师">2. RenderNode – 专注的画师</a></li><li class="article-toc-h3"><a href="#3-buildernode-高效的预制构件工厂">3. BuilderNode – 高效的预制构件工厂</a></li></ul></li><li class="article-toc-h2"><a href="#如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</a><ul><li class="article-toc-h3"><a href="#核心组件">核心组件</a></li><li class="article-toc-h3"><a href="#完整接入流程">完整接入流程</a></li><li class="article-toc-h3"><a href="#骨架示例">骨架示例</a></li></ul></li><li class="article-toc-h2"><a href="#实际案例-高性能动态画板">实际案例：高性能动态画板</a><ul><li class="article-toc-h3"><a href="#使用-buildernode-framenode-的实现思路">使用 BuilderNode + FrameNode 的实现思路</a></li></ul></li><li class="article-toc-h2"><a href="#总结-如何选择">总结：如何选择？</a></li><li class="article-toc-h2"><a href="#学习建议">学习建议</a></li></ul>
+            <ul class="article-toc-list"><li><a href="#什么是自定义节点">什么是自定义节点？</a></li><li><a href="#自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</a></li><li><a href="#三种核心自定义节点">三种核心自定义节点</a></li><li><a href="#如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</a></li><li><a href="#实际案例-高性能动态画板">实际案例：高性能动态画板</a></li><li><a href="#总结-如何选择">总结：如何选择？</a></li><li><a href="#学习建议">学习建议</a></li></ul>
           </details>
 
           <div class="article-body"><h2 id="什么是自定义节点">什么是自定义节点？</h2><p>在 ArkUI 中，自定义节点是一套<strong>命令式</strong>的底层接口，用于直接创建和控制 UI 实体节点。它与常规的声明式开发（使用 <code>@Component</code> 和系统组件）不同，主要解决以下问题：</p>
