@@ -19,9 +19,9 @@
   resize();
   window.addEventListener('resize', resize);
 
-  var COUNT = 140;
-  var CONNECT_DIST = 180;
-  var MOUSE_RADIUS = 250;
+  var COUNT = 350;
+  var CONNECT_DIST = 140;
+  var MOUSE_RADIUS = 300;
   var DEPTH = 800;
 
   function getColor(rgb) {
