@@ -42,6 +42,11 @@
 
   <div class="layout">
     <main class="main">
+      <nav class="article-toc" id="articleToc">
+        <div class="article-toc-title">目录</div>
+        <ul class="article-toc-list">{{toc}}</ul>
+      </nav>
+
       <div class="post-layout">
         <article class="post-content">
           <div class="article-header">
@@ -53,7 +58,7 @@
           </div>
 
           <details class="mobile-toc">
-            <summary>📑 目录</summary>
+            <summary>目录</summary>
             <ul class="article-toc-list">{{toc}}</ul>
           </details>
 
@@ -63,11 +68,6 @@
             <a href="/" class="back-link">← 返回首页</a>
           </div>
         </article>
-
-        <nav class="article-toc" id="articleToc">
-          <div class="article-toc-title">目录</div>
-          <ul class="article-toc-list">{{toc}}</ul>
-        </nav>
       </div>
     </main>
   </div>

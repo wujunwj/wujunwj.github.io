@@ -56,6 +56,11 @@
 
   <div class="layout">
     <main class="main">
+      <nav class="article-toc" id="articleToc">
+        <div class="article-toc-title">目录</div>
+        <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-iova-是什么">1. IOVA 是什么？</a><ul><li class="article-toc-h3"><a href="#核心原理">核心原理</a></li><li class="article-toc-h3"><a href="#简单类比">简单类比</a></li></ul></li><li class="article-toc-h2"><a href="#2-与-malloc-new-申请的内存的区别">2. 与 malloc / new 申请的内存的区别</a></li><li class="article-toc-h2"><a href="#3-关键区别详解">3. 关键区别详解</a><ul><li class="article-toc-h3"><a href="#3-1-目的和使用者不同">3.1 目的和使用者不同</a></li><li class="article-toc-h3"><a href="#3-2-生命周期和管理不同">3.2 生命周期和管理不同</a></li><li class="article-toc-h3"><a href="#3-3-地址值的可能关系">3.3 地址值的可能关系</a></li></ul></li><li class="article-toc-h2"><a href="#4-生动示例-gpu-纹理传输">4. 生动示例：GPU 纹理传输</a></li><li class="article-toc-h2"><a href="#5-总结对比表">5. 总结对比表</a></li></ul>
+      </nav>
+
       <div class="post-layout">
         <article class="post-content">
           <div class="article-header">
@@ -67,7 +72,7 @@
           </div>
 
           <details class="mobile-toc">
-            <summary>📑 目录</summary>
+            <summary>目录</summary>
             <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-iova-是什么">1. IOVA 是什么？</a><ul><li class="article-toc-h3"><a href="#核心原理">核心原理</a></li><li class="article-toc-h3"><a href="#简单类比">简单类比</a></li></ul></li><li class="article-toc-h2"><a href="#2-与-malloc-new-申请的内存的区别">2. 与 malloc / new 申请的内存的区别</a></li><li class="article-toc-h2"><a href="#3-关键区别详解">3. 关键区别详解</a><ul><li class="article-toc-h3"><a href="#3-1-目的和使用者不同">3.1 目的和使用者不同</a></li><li class="article-toc-h3"><a href="#3-2-生命周期和管理不同">3.2 生命周期和管理不同</a></li><li class="article-toc-h3"><a href="#3-3-地址值的可能关系">3.3 地址值的可能关系</a></li></ul></li><li class="article-toc-h2"><a href="#4-生动示例-gpu-纹理传输">4. 生动示例：GPU 纹理传输</a></li><li class="article-toc-h2"><a href="#5-总结对比表">5. 总结对比表</a></li></ul>
           </details>
 
@@ -192,11 +197,6 @@
             <a href="/" class="back-link">← 返回首页</a>
           </div>
         </article>
-
-        <nav class="article-toc" id="articleToc">
-          <div class="article-toc-title">目录</div>
-          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-iova-是什么">1. IOVA 是什么？</a><ul><li class="article-toc-h3"><a href="#核心原理">核心原理</a></li><li class="article-toc-h3"><a href="#简单类比">简单类比</a></li></ul></li><li class="article-toc-h2"><a href="#2-与-malloc-new-申请的内存的区别">2. 与 malloc / new 申请的内存的区别</a></li><li class="article-toc-h2"><a href="#3-关键区别详解">3. 关键区别详解</a><ul><li class="article-toc-h3"><a href="#3-1-目的和使用者不同">3.1 目的和使用者不同</a></li><li class="article-toc-h3"><a href="#3-2-生命周期和管理不同">3.2 生命周期和管理不同</a></li><li class="article-toc-h3"><a href="#3-3-地址值的可能关系">3.3 地址值的可能关系</a></li></ul></li><li class="article-toc-h2"><a href="#4-生动示例-gpu-纹理传输">4. 生动示例：GPU 纹理传输</a></li><li class="article-toc-h2"><a href="#5-总结对比表">5. 总结对比表</a></li></ul>
-        </nav>
       </div>
     </main>
   </div>
