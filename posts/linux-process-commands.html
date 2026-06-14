@@ -55,6 +55,14 @@
   </aside>
 
   <div class="layout">
+    <div class="side-ring" id="sideRing" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <svg class="side-ring-svg" viewBox="0 0 100 100">
+        <circle class="ring-bg" cx="50" cy="50" r="46" fill="none" stroke-width="4"/>
+        <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="46" fill="none" stroke-width="4" stroke-dasharray="0, 289" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+      </svg>
+      <span class="ring-text" id="ringText">0</span>
+    </div>
+
     <main class="main">
       <nav class="article-toc" id="articleToc">
         <div class="article-toc-title">目录</div>
@@ -643,6 +651,35 @@ lsof -i -N
       document.getElementById('sidebar').classList.toggle('open');
       document.getElementById('sidebarOverlay').classList.toggle('open');
     }
+
+    // Reading progress ring
+    const ringFill = document.getElementById('ringFill');
+    const ringText = document.getElementById('ringText');
+    const ring = document.getElementById('sideRing');
+    const CIRCUMFERENCE = 289;
+    let rx = 0, ry = 0, cx = 0, cy = 0;
+
+    document.addEventListener('scroll', function() {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = total > 0 ? Math.round(window.scrollY / total * 100) : 0;
+      const offset = CIRCUMFERENCE - CIRCUMFERENCE * pct / 100;
+      ringFill.style.strokeDasharray = (CIRCUMFERENCE - offset) + ' ' + CIRCUMFERENCE;
+      ringText.textContent = pct;
+      ring.classList.toggle('ring-visible', window.scrollY > 200);
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      rx = (e.clientX / window.innerWidth - 0.5) * 18;
+      ry = (e.clientY / window.innerHeight - 0.5) * 14;
+    });
+
+    function animateRing() {
+      cx += (rx - cx) * 0.08;
+      cy += (ry - cy) * 0.08;
+      ring.style.transform = 'translate(' + cx.toFixed(1) + 'px, ' + cy.toFixed(1) + 'px)';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
   </script>
 </body>
 </html>
