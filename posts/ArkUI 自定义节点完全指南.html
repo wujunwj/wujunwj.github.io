@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArkUI 自定义节点完全指南 | TechBlog</title>
+    <meta name="description" content="ArkUI 自定义节点完全指南">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
+<li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
+<li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
+<li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content post-layout">
+                <div class="article-toc">
+                    <div class="article-toc-title">目录</div>
+                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#什么是自定义节点">什么是自定义节点？</a></li><li class="article-toc-h2"><a href="#自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</a></li><li class="article-toc-h2"><a href="#三种核心自定义节点">三种核心自定义节点</a><ul><li class="article-toc-h3"><a href="#1-framenode-全能架构师">1. FrameNode – 全能架构师</a></li><li class="article-toc-h3"><a href="#2-rendernode-专注的画师">2. RenderNode – 专注的画师</a></li><li class="article-toc-h3"><a href="#3-buildernode-高效的预制构件工厂">3. BuilderNode – 高效的预制构件工厂</a></li></ul></li><li class="article-toc-h2"><a href="#如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</a><ul><li class="article-toc-h3"><a href="#核心组件">核心组件</a></li><li class="article-toc-h3"><a href="#完整接入流程">完整接入流程</a></li><li class="article-toc-h3"><a href="#骨架示例">骨架示例</a></li></ul></li><li class="article-toc-h2"><a href="#实际案例-高性能动态画板">实际案例：高性能动态画板</a><ul><li class="article-toc-h3"><a href="#使用-buildernode-framenode-的实现思路">使用 BuilderNode + FrameNode 的实现思路</a></li></ul></li><li class="article-toc-h2"><a href="#总结-如何选择">总结：如何选择？</a></li><li class="article-toc-h2"><a href="#学习建议">学习建议</a></li></ul>
+                </div>
+                <article class="post-content">
+                    <div class="article-header">
+                        <h1 class="article-title">ArkUI 自定义节点完全指南</h1>
+                        <div class="article-meta">
+                            <span>{2026-04-19}</span>
+                            <span>ohos</span>
+                        </div>
+                    </div>
+                    <div class="article-body"><h1 id="arkui-自定义节点完全指南">ArkUI 自定义节点完全指南</h1><h2 id="什么是自定义节点">什么是自定义节点？</h2><p>在 ArkUI 中，自定义节点是一套<strong>命令式</strong>的底层接口，用于直接创建和控制 UI 实体节点。它与常规的声明式开发（使用 <code>@Component</code> 和系统组件）不同，主要解决以下问题：</p>
+<ul>
+<li><strong>性能瓶颈</strong>：高频动态增删 UI 时，声明式响应式更新会导致大量 diff 计算和节点重建。</li>
+<li><strong>交互卡顿</strong>：拖拽、动画等需要极致流畅的场景，声明式链路较长。</li>
+<li><strong>底层控制不足</strong>：需要自定义测量/布局、无侵入监听组件树、节点复用等能力。</li>
+</ul>
+<blockquote>
+<p>简单理解：声明式 UI 覆盖 99% 的日常需求，而自定义节点是那 1% 高性能、高灵活性场景的“后门”。</p>
+</blockquote>
+<h2 id="自定义节点与声明式组件的对比">自定义节点与声明式组件的对比</h2><table>
+<thead>
+<tr>
+<th align="left">特性维度</th>
+<th align="left">自定义组件 (<code>@Component</code>)</th>
+<th align="left">自定义节点 (<code>FrameNode</code>/<code>RenderNode</code>/<code>BuilderNode</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>编程范式</strong></td>
+<td align="left">声明式（描述 UI，框架驱动更新）</td>
+<td align="left">命令式（直接创建、修改节点）</td>
+</tr>
+<tr>
+<td align="left"><strong>节点管理</strong></td>
+<td align="left">由框架自动管理</td>
+<td align="left">开发者持有引用并手动操作</td>
+</tr>
+<tr>
+<td align="left"><strong>性能开销</strong></td>
+<td align="left">依赖 diff 算法，大量动态项时较高</td>
+<td align="left">直接操作，无 diff 开销，节点可复用</td>
+</tr>
+<tr>
+<td align="left"><strong>适用场景</strong></td>
+<td align="left">表单、列表、静态页面</td>
+<td align="left">画板、游戏、图表、高性能动态布局</td>
+</tr>
+<tr>
+<td align="left"><strong>控制粒度</strong></td>
+<td align="left">组件级别</td>
+<td align="left">底层节点级别</td>
+</tr>
+</tbody></table>
+<h2 id="三种核心自定义节点">三种核心自定义节点</h2><p>ArkUI 提供了三种定位不同的自定义节点，分别应对不同需求。</p>
+<h3 id="1-framenode-全能架构师">1. FrameNode – 全能架构师</h3><p><strong>定位</strong>：管理节点结构、自定义布局、系统组件代理。<br><strong>能力</strong>：创建节点、增删子节点、自定义测量/布局、代理系统组件。</p>
+<h4 id="使用场景">使用场景</h4><ul>
+<li><strong>完全自定义布局</strong>：如圆形菜单、瀑布流，重写 <code>onMeasure</code> 和 <code>onLayout</code>。</li>
+<li><strong>动态节点操作</strong>：画图应用中命令式添加/删除图形。</li>
+<li><strong>系统组件代理</strong>：无侵入监听组件树，实现全埋点或性能监控。</li>
+</ul>
+<h4 id="示例-动态添加-删除文本节点">示例：动态添加/删除文本节点</h4><pre><code class="language-typescript">import { NodeController, FrameNode, UIContext } from &#39;@kit.ArkUI&#39;;
+
+class FrameNodeController extends NodeController {
+  private rootNode: FrameNode | null = null;
+
+  makeNode(uiContext: UIContext): FrameNode | null {
+    if (this.rootNode === null) {
+      this.rootNode = new FrameNode(uiContext);
+      
+      // 动态创建子节点
+      const textNode = new FrameNode(uiContext);
+      textNode.label = &quot;Text&quot;;
+      textNode.props = { text: &quot;Hello, FrameNode!&quot; };
+      
+      this.rootNode.appendChild(textNode);
+      
+      // 后续可通过 this.rootNode.removeChild(textNode) 删除
+    }
+    return this.rootNode;
+  }
+}
+</code></pre>
+<h3 id="2-rendernode-专注的画师">2. RenderNode – 专注的画师</h3><p><strong>定位</strong>：高性能自定义绘制，不关心布局。<br><strong>能力</strong>：重写 <code>draw()</code> 方法，直接调用底层绘制 API。</p>
+<h4 id="使用场景-2">使用场景</h4><ul>
+<li>K线图、实时曲线、画板等需要大量独立绘制的场景。</li>
+<li>避免创建大量 UI 组件，减少内存和渲染开销。</li>
+</ul>
+<h4 id="示例-绘制红色矩形">示例：绘制红色矩形</h4><pre><code class="language-typescript">import { RenderNode, FrameNode, NodeController, UIContext, DrawContext } from &#39;@kit.ArkUI&#39;;
+
+class MyRenderNode extends RenderNode {
+  draw(context: DrawContext) {
+    const canvas = context.canvas;
+    canvas.drawRect({ x: 0, y: 0, width: 100, height: 100 });
+  }
+}
+
+class RenderNodeController extends NodeController {
+  private rootNode: FrameNode | null = null;
+
+  makeNode(uiContext: UIContext): FrameNode | null {
+    this.rootNode = new FrameNode(uiContext);
+    const rootRenderNode = this.rootNode.getRenderNode();
+    if (rootRenderNode) {
+      const renderNode = new MyRenderNode();
+      renderNode.frame = { x: 0, y: 0, width: 100, height: 100 };
+      renderNode.backgroundColor = 0xFFFF0000; // 红色背景
+      rootRenderNode.appendChild(renderNode);
+    }
+    return this.rootNode;
+  }
+}
+</code></pre>
+<h3 id="3-buildernode-高效的预制构件工厂">3. BuilderNode – 高效的预制构件工厂</h3><p><strong>定位</strong>：将声明式 <code>@Builder</code> 函数包装成可复用的命令式节点。<br><strong>能力</strong>：预创建节点模板，快速实例化并挂载到不同位置。</p>
+<h4 id="使用场景-3">使用场景</h4><ul>
+<li><strong>跨页面组件复用</strong>：如视频流卡片、通用弹窗、可拖拽浮动按钮。</li>
+<li><strong>节点复用池</strong>：提前渲染复杂 UI，避免重复创建开销。</li>
+</ul>
+<h4 id="示例-复用-builder-定义的文本组件">示例：复用 @Builder 定义的文本组件</h4><pre><code class="language-typescript">import { NodeController, BuilderNode, FrameNode, UIContext } from &#39;@kit.ArkUI&#39;;
+
+@Builder
+function MyTextBuilder(text: string) {
+  Column() {
+    Text(text)
+      .fontSize(20)
+      .fontWeight(FontWeight.Bold)
+      .margin(10)
+  }
+}
+
+class BuilderNodeController extends NodeController {
+  private builderNode: BuilderNode&lt;[string]&gt; | null = null;
+  private wrapBuilder = wrapBuilder(MyTextBuilder);
+
+  makeNode(uiContext: UIContext): FrameNode | null {
+    if (this.builderNode === null) {
+      this.builderNode = new BuilderNode(uiContext);
+      this.builderNode.build(this.wrapBuilder, &quot;Hello from BuilderNode!&quot;);
+    }
+    return this.builderNode.getFrameNode();
+  }
+}
+</code></pre>
+<h2 id="如何将自定义节点接入声明式页面">如何将自定义节点接入声明式页面？</h2><p>自定义节点无法直接插入声明式组件树，需要借助<strong>占位节点</strong>和<strong>控制器</strong>。</p>
+<h3 id="核心组件">核心组件</h3><ul>
+<li><strong><code>NodeController</code></strong>：抽象类，实现 <code>makeNode()</code> 方法，在其中创建并返回自定义节点的根节点（通常是 <code>FrameNode</code>）。</li>
+<li><strong><code>NodeContainer</code></strong>：声明式组件，接收 <code>NodeController</code> 实例，作为自定义节点的挂载容器。</li>
+</ul>
+<h3 id="完整接入流程">完整接入流程</h3><ol>
+<li>定义控制器，在 <code>makeNode()</code> 中构建自定义节点。</li>
+<li>在页面中使用 <code>NodeContainer</code> 并绑定控制器实例。</li>
+</ol>
+<h3 id="骨架示例">骨架示例</h3><pre><code class="language-typescript">import { NodeController, FrameNode, UIContext, NodeContainer } from &#39;@kit.ArkUI&#39;;
+
+// 1. 定义控制器
+class MyNodeController extends NodeController {
+  makeNode(uiContext: UIContext): FrameNode | null {
+    // 创建并返回自定义节点（可以是 FrameNode / BuilderNode 的根节点）
+    const root = new FrameNode(uiContext);
+    // ... 构建节点树
+    return root;
+  }
+}
+
+// 2. 在页面中使用
+@Entry
+@Component
+struct Index {
+  private myController: MyNodeController = new MyNodeController();
+
+  build() {
+    Column() {
+      // 声明式组件...
+      NodeContainer(this.myController) // 占位容器
+        .width(&#39;100%&#39;)
+        .height(&#39;100%&#39;)
+    }
+  }
+}
+</code></pre>
+<h2 id="实际案例-高性能动态画板">实际案例：高性能动态画板</h2><p>假设需要开发一个交互式画板，用户可以从工具栏拖拽出图形（圆形、矩形），并在画布上自由移动、缩放。使用纯声明式会导致性能问题，而自定义节点可以完美解决。</p>
+<h3 id="使用-buildernode-framenode-的实现思路">使用 BuilderNode + FrameNode 的实现思路</h3><pre><code class="language-typescript">// 1. 使用 BuilderNode 缓存图形模板
+let cachedShapeNode: BuilderNode&lt;[ShapeType]&gt; | null = null;
+
+function getShapeTemplate(type: ShapeType): BuilderNode&lt;[ShapeType]&gt; {
+  if (!cachedShapeNode) {
+    cachedShapeNode = new BuilderNode();
+    cachedShapeNode.build(wrapBuilder(shapeBuilder), type);
+  }
+  return cachedShapeNode;
+}
+
+@Builder
+function shapeBuilder(type: ShapeType) {
+  // 定义图形的声明式 UI
+  Shape(type === &#39;circle&#39; ? ShapeType.Circle : ShapeType.Rect)
+    .width(50).height(50)
+    .fill(Color.Blue)
+    .onTouch((event) =&gt; { /* 处理拖拽逻辑，直接操作 FrameNode 位置 */ })
+}
+
+// 2. 在画布控制器中动态添加图形
+class CanvasController extends NodeController {
+  private canvasNode: FrameNode | null = null;
+
+  makeNode(uiContext: UIContext): FrameNode | null {
+    this.canvasNode = new FrameNode(uiContext);
+    return this.canvasNode;
+  }
+
+  addShape(type: ShapeType, x: number, y: number) {
+    const template = getShapeTemplate(type);
+    const shapeNode = template.createFrameNode(); // 快速实例化
+    shapeNode.position = { x, y };
+    this.canvasNode?.appendChild(shapeNode);
+  }
+}
+</code></pre>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>新增图形无需触发整个画布的 diff 更新，直接命令式挂载。</li>
+<li>拖拽时直接修改 <code>shapeNode.position</code>，无状态开销，流畅度极高。</li>
+<li>节点复用池减少重复创建成本。</li>
+</ul>
+<h2 id="总结-如何选择">总结：如何选择？</h2><table>
+<thead>
+<tr>
+<th align="left">需求</th>
+<th align="left">推荐节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">动态增删节点、自定义布局、代理系统组件</td>
+<td align="left"><strong>FrameNode</strong></td>
+</tr>
+<tr>
+<td align="left">高性能自定义绘制（图表、画板）</td>
+<td align="left"><strong>RenderNode</strong></td>
+</tr>
+<tr>
+<td align="left">复用声明式组件、预创建模板</td>
+<td align="left"><strong>BuilderNode</strong></td>
+</tr>
+<tr>
+<td align="left">以上需求组合使用</td>
+<td align="left">同时使用 <code>FrameNode</code> + <code>RenderNode</code> 或 <code>BuilderNode</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意：三种节点并非互斥。例如，可以用 <code>BuilderNode</code> 预定义复杂 UI，再将其根 <code>FrameNode</code> 挂载到 <code>NodeContainer</code>；也可以在 <code>FrameNode</code> 中添加 <code>RenderNode</code> 进行自定义绘制。</p>
+</blockquote>
+<h2 id="学习建议">学习建议</h2><ul>
+<li>先从常规声明式开发入手，理解 ArkUI 的响应式机制。</li>
+<li>当遇到性能瓶颈或需要突破框架限制时，再考虑使用自定义节点。</li>
+<li>实际开发中，优先尝试 <code>BuilderNode</code>（因为它兼容声明式写法），其次是 <code>FrameNode</code>，最后才是 <code>RenderNode</code>。</li>
+</ul>
+<p>自定义节点是 ArkUI 进阶必备能力，掌握它可以让你的应用在性能和灵活性上达到新的高度。</p>
+</div>
+                    <div class="article-footer">
+                        <a href="/" class="back-link">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
+        var idCounter = {};
+        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.article-toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
+    </script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArkUI 状态管理装饰器完全指南 | TechBlog</title>
+    <meta name="description" content="ArkUI 状态管理装饰器完全指南">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
+<li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
+<li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
+<li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content post-layout">
+                <div class="article-toc">
+                    <div class="article-toc-title">目录</div>
+                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#目录">目录</a></li><li class="article-toc-h2"><a href="#概述">概述</a></li><li class="article-toc-h2"><a href="#v1-与-v2-的关系">V1 与 V2 的关系</a></li><li class="article-toc-h2"><a href="#组件内部状态管理">组件内部状态管理</a><ul><li class="article-toc-h3"><a href="#state-v1-与-local-v2">@State (V1) 与 @Local (V2)</a></li></ul></li><li class="article-toc-h2"><a href="#父子组件通信">父子组件通信</a><ul><li class="article-toc-h3"><a href="#prop-v1-与-param-v2">@Prop (V1) 与 @Param (V2)</a></li><li class="article-toc-h3"><a href="#link-v1-与-param-event-v2">@Link (V1) 与 @Param + @Event (V2)</a></li></ul></li><li class="article-toc-h2"><a href="#跨层级组件通信">跨层级组件通信</a><ul><li class="article-toc-h3"><a href="#provide-与-consume-v1-provider-与-consumer-v2">@Provide 与 @Consume (V1) / @Provider 与 @Consumer (V2)</a></li></ul></li><li class="article-toc-h2"><a href="#全局与页面级存储">全局与页面级存储</a><ul><li class="article-toc-h3"><a href="#appstorage-storagelink-storageprop">AppStorage + @StorageLink / @StorageProp</a></li><li class="article-toc-h3"><a href="#localstorage-localstoragelink-localstorageprop">LocalStorage + @LocalStorageLink / @LocalStorageProp</a></li></ul></li><li class="article-toc-h2"><a href="#嵌套对象与数组观察">嵌套对象与数组观察</a><ul><li class="article-toc-h3"><a href="#observed-与-objectlink-v1-observedv2-与-trace-v2">@Observed 与 @ObjectLink (V1) / @ObservedV2 与 @Trace (V2)</a></li></ul></li><li class="article-toc-h2"><a href="#关于字符串别名与全局变量的疑问解答">关于字符串别名与全局变量的疑问解答</a><ul><li class="article-toc-h3"><a href="#为什么使用字符串-如-key-而非直接使用全局变量">为什么使用字符串（如 `'key'`）而非直接使用全局变量？</a></li><li class="article-toc-h3"><a href="#关于-provide-alias-别名的意义">关于 `@Provide('alias')` 别名的意义</a></li></ul></li><li class="article-toc-h2"><a href="#注意事项与最佳实践">注意事项与最佳实践</a></li><li class="article-toc-h2"><a href="#装饰器速查表">装饰器速查表</a></li></ul>
+                </div>
+                <article class="post-content">
+                    <div class="article-header">
+                        <h1 class="article-title">ArkUI 状态管理装饰器完全指南</h1>
+                        <div class="article-meta">
+                            <span>{2026-04-19}</span>
+                            <span>ohos</span>
+                        </div>
+                    </div>
+                    <div class="article-body"><h1 id="arkui-状态管理装饰器完全指南">ArkUI 状态管理装饰器完全指南</h1><h2 id="目录">目录</h2><ol>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#v1-%E4%B8%8E-v2-%E7%9A%84%E5%85%B3%E7%B3%BB">V1 与 V2 的关系</a></li>
+<li><a href="#%E7%BB%84%E4%BB%B6%E5%86%85%E9%83%A8%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86">组件内部状态管理</a><ul>
+<li><a href="#state-v1-%E4%B8%8E-local-v2">@State (V1) 与 @Local (V2)</a></li>
+</ul>
+</li>
+<li><a href="#%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1">父子组件通信</a><ul>
+<li><a href="#prop-v1-%E4%B8%8E-param-v2">@Prop (V1) 与 @Param (V2)</a></li>
+<li><a href="#link-v1-%E4%B8%8E-param--event-v2">@Link (V1) 与 @Param + @Event (V2)</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B7%A8%E5%B1%82%E7%BA%A7%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1">跨层级组件通信</a><ul>
+<li><a href="#provide-%E4%B8%8E-consume-v1--provider-%E4%B8%8E-consumer-v2">@Provide 与 @Consume (V1) / @Provider 与 @Consumer (V2)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%A8%E5%B1%80%E4%B8%8E%E9%A1%B5%E9%9D%A2%E7%BA%A7%E5%AD%98%E5%82%A8">全局与页面级存储</a><ul>
+<li><a href="#appstorage--storagelink--storageprop">AppStorage + @StorageLink / @StorageProp</a></li>
+<li><a href="#localstorage--localstoragelink--localstorageprop">LocalStorage + @LocalStorageLink / @LocalStorageProp</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1%E4%B8%8E%E6%95%B0%E7%BB%84%E8%A7%82%E5%AF%9F">嵌套对象与数组观察</a><ul>
+<li><a href="#observed-%E4%B8%8E-objectlink-v1--observedv2-%E4%B8%8E-trace-v2">@Observed 与 @ObjectLink (V1) / @ObservedV2 与 @Trace (V2)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%AB%E5%90%8D%E4%B8%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E7%9A%84%E7%96%91%E9%97%AE%E8%A7%A3%E7%AD%94">关于字符串别名与全局变量的疑问解答</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">注意事项与最佳实践</a></li>
+<li><a href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E9%80%9F%E6%9F%A5%E8%A1%A8">装饰器速查表</a></li>
+</ol>
+<hr>
+<h2 id="概述">概述</h2><p>ArkUI 的状态管理装饰器是构建响应式 UI 的核心工具，它们负责在数据变化时自动触发界面更新。装饰器主要分为 <strong>V1 稳定版</strong>（API 9+）和 <strong>V2 新版</strong>（API 12+）。本文将从实际场景出发，逐一介绍各装饰器的用途、差异及最佳实践。</p>
+<hr>
+<h2 id="v1-与-v2-的关系">V1 与 V2 的关系</h2><table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">V1 状态管理</th>
+<th align="left">V2 状态管理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>状态</strong></td>
+<td align="left">成熟、稳定，自 API 9 起广泛使用，文档和生态完善。</td>
+<td align="left">新一代设计，API 12 引入，聚焦性能优化与精准依赖追踪。</td>
+</tr>
+<tr>
+<td align="left"><strong>核心设计</strong></td>
+<td align="left">通过装饰器组合（如 <code>@State</code> + <code>@Link</code>）实现同步。</td>
+<td align="left">引入 <code>@ObservedV2</code> 和 <code>@Trace</code> 实现属性级观察。</td>
+</tr>
+<tr>
+<td align="left"><strong>兼容性</strong></td>
+<td align="left">所有 API 版本均支持。</td>
+<td align="left">需要 API 12 及以上设备。</td>
+</tr>
+<tr>
+<td align="left"><strong>选择建议</strong></td>
+<td align="left">当前生产项目首选，心智负担小。</td>
+<td align="left">新项目或对复杂列表性能有极致要求时使用。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 <strong>注意</strong>：V1 与 V2 并非互斥，你可以在 V1 组件中使用 V2 装饰的数据模型，两者可协同工作。</p>
+</blockquote>
+<hr>
+<h2 id="组件内部状态管理">组件内部状态管理</h2><h3 id="state-v1-与-local-v2">@State (V1) 与 @Local (V2)</h3><ul>
+<li><strong>作用</strong>：声明组件的私有响应式变量。变量值变化时，依赖该变量的 UI 自动刷新。</li>
+<li><strong>适用场景</strong>：组件内部的独立状态，如计数器、开关状态、输入框文本等。</li>
+</ul>
+<h4 id="示例-v1-风格-code-state-code">示例（V1 风格 <code>@State</code>）</h4><pre><code class="language-typescript">@Component
+struct MyCounter {
+  // 组件内部的计数状态，变化会触发 UI 更新
+  @State count: number = 0;
+
+  build() {
+    Column() {
+      Text(`Current Count: ${this.count}`)
+        .fontSize(20)
+      Button(&#39;Add&#39;)
+        .onClick(() =&gt; {
+          this.count++; // 直接修改状态，UI 自动刷新
+        })
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2 id="父子组件通信">父子组件通信</h2><h3 id="prop-v1-与-param-v2">@Prop (V1) 与 @Param (V2)</h3><ul>
+<li><strong>作用</strong>：实现父组件到子组件的 <strong>单向数据同步</strong>。父组件数据变化会传递给子组件，子组件内部修改不影响父组件。</li>
+<li><strong>适用场景</strong>：子组件仅用于展示数据，不修改数据，如标题、状态文本、配置项等。</li>
+</ul>
+<h4 id="示例-v1-风格-code-prop-code">示例（V1 风格 <code>@Prop</code>）</h4><pre><code class="language-typescript">// 子组件：只读展示
+@Component
+struct ChildTitle {
+  @Prop title: string;
+
+  build() {
+    Text(this.title)
+      .fontSize(24)
+      .fontWeight(FontWeight.Bold)
+  }
+}
+
+// 父组件
+@Entry
+@Component
+struct ParentPage {
+  @State parentTitle: string = &#39;Hello from Parent&#39;;
+
+  build() {
+    Column() {
+      // 子组件接收父组件的状态
+      ChildTitle({ title: this.parentTitle })
+
+      Button(&#39;Update Title&#39;)
+        .onClick(() =&gt; {
+          // 只有父组件可以修改状态
+          this.parentTitle = &#39;Title Updated by Parent&#39;;
+        })
+    }
+  }
+}
+</code></pre>
+<h3 id="link-v1-与-param-event-v2">@Link (V1) 与 @Param + @Event (V2)</h3><ul>
+<li><strong>作用</strong>：建立父子组件之间的 <strong>双向数据绑定</strong>。任何一方的修改都会同步到另一方。</li>
+<li><strong>适用场景</strong>：父子组件需要共同修改同一份数据，如表单输入、滑块值、开关状态等。</li>
+</ul>
+<h4 id="示例-v1-风格-code-link-code">示例（V1 风格 <code>@Link</code>）</h4><pre><code class="language-typescript">// 子组件：双向绑定
+@Component
+struct ChildSwitch {
+  // @Link 实现双向绑定，使用 &#39;{{content}}#39; 前缀传递
+  @Link isOn: boolean;
+
+  build() {
+    Toggle({ type: ToggleType.Switch, isOn: this.isOn })
+      .onChange((isOn: boolean) =&gt; {
+        this.isOn = isOn; // 子组件修改，父组件同步
+      })
+  }
+}
+
+// 父组件
+@Entry
+@Component
+struct ParentPage {
+  @State switchStatus: boolean = false;
+
+  build() {
+    Column() {
+      Text(`Switch is: ${this.switchStatus ? &#39;ON&#39; : &#39;OFF&#39;}`)
+        .fontSize(18)
+      // 传递时使用 &#39;{{content}}#39; 前缀，建立双向绑定
+      ChildSwitch({ isOn: $switchStatus })
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2 id="跨层级组件通信">跨层级组件通信</h2><h3 id="provide-与-consume-v1-provider-与-consumer-v2">@Provide 与 @Consume (V1) / @Provider 与 @Consumer (V2)</h3><ul>
+<li><strong>作用</strong>：实现跨层级组件的 <strong>双向数据同步</strong>。祖先组件用 <code>@Provide</code> 提供数据，任意后代组件用 <code>@Consume</code> 消费数据，无需中间组件逐层传递。</li>
+<li><strong>适用场景</strong>：深层嵌套组件共享状态，如主题配置、用户信息、全局设置等。</li>
+</ul>
+<h4 id="示例-v1-风格-code-provide-code-与-code-consume-code">示例（V1 风格 <code>@Provide</code> 与 <code>@Consume</code>）</h4><pre><code class="language-typescript">// 孙组件：消费者
+@Component
+struct GrandChild {
+  // 通过别名 &#39;sharedCount&#39; 消费祖先组件提供的状态
+  @Consume(&#39;sharedCount&#39;) count: number;
+
+  build() {
+    Button(`GrandChild: ${this.count}`)
+      .onClick(() =&gt; {
+        this.count++; // 修改会同步到祖先组件
+      })
+  }
+}
+
+// 子组件：中间层，无需处理状态
+@Component
+struct Child {
+  build() {
+    GrandChild()
+  }
+}
+
+// 祖先组件：提供者
+@Entry
+@Component
+struct Ancestor {
+  // 通过别名 &#39;sharedCount&#39; 提供状态
+  @Provide(&#39;sharedCount&#39;) count: number = 0;
+
+  build() {
+    Column() {
+      Text(`Ancestor: ${this.count}`)
+        .fontSize(24)
+      Child() // 子组件内部包含孙组件
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2 id="全局与页面级存储">全局与页面级存储</h2><h3 id="appstorage-storagelink-storageprop">AppStorage + @StorageLink / @StorageProp</h3><ul>
+<li><strong>作用</strong>：<code>AppStorage</code> 是应用级的全局状态容器。<code>@StorageLink</code> 建立双向绑定，<code>@StorageProp</code> 建立单向绑定。</li>
+<li><strong>适用场景</strong>：全应用共享状态，如用户登录信息、主题模式、全局配置等。</li>
+</ul>
+<h4 id="示例-使用-code-storagelink-code">示例（使用 <code>@StorageLink</code>）</h4><pre><code class="language-typescript">// 在应用启动时初始化 AppStorage
+// AppStorage.setOrCreate(&#39;appTheme&#39;, &#39;light&#39;);
+
+@Entry
+@Component
+struct SettingsPage {
+  // 双向绑定到 AppStorage 中的 &#39;appTheme&#39;
+  @StorageLink(&#39;appTheme&#39;) theme: string = &#39;light&#39;;
+
+  build() {
+    Column() {
+      Text(`Current Theme: ${this.theme}`)
+      Button(&#39;Switch to Dark&#39;)
+        .onClick(() =&gt; {
+          this.theme = &#39;dark&#39;; // 修改会同步到 AppStorage，并通知所有绑定该 key 的组件
+        })
+    }
+  }
+}
+</code></pre>
+<h3 id="localstorage-localstoragelink-localstorageprop">LocalStorage + @LocalStorageLink / @LocalStorageProp</h3><ul>
+<li><strong>作用</strong>：<code>LocalStorage</code> 是页面级的 UI 状态存储，用于 <code>UIAbility</code> 内或相邻页面间共享数据。绑定方式与 <code>AppStorage</code> 类似。</li>
+<li><strong>适用场景</strong>：页面内多个组件或相邻页面间的状态共享。</li>
+</ul>
+<h4 id="示例-使用-code-localstoragelink-code">示例（使用 <code>@LocalStorageLink</code>）</h4><pre><code class="language-typescript">// 创建 LocalStorage 实例并初始化
+let pageStorage = new LocalStorage({ &#39;userName&#39;: &#39;Guest&#39; });
+
+@Entry(pageStorage)
+@Component
+struct ProfilePage {
+  // 双向绑定到 LocalStorage 中的 &#39;userName&#39;
+  @LocalStorageLink(&#39;userName&#39;) userName: string = &#39;&#39;;
+
+  build() {
+    Column() {
+      Text(`Welcome, ${this.userName}!`)
+      Button(&#39;Change Name&#39;)
+        .onClick(() =&gt; {
+          this.userName = &#39;NewName&#39;; // 修改会同步回 LocalStorage
+        })
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2 id="嵌套对象与数组观察">嵌套对象与数组观察</h2><h3 id="observed-与-objectlink-v1-observedv2-与-trace-v2">@Observed 与 @ObjectLink (V1) / @ObservedV2 与 @Trace (V2)</h3><ul>
+<li><strong>作用</strong>：<code>@Observed</code> 标记一个类使其变得可观察，<code>@ObjectLink</code> 在子组件中接收该类的实例并建立双向数据绑定，用于观察和响应嵌套属性的变化。</li>
+<li><strong>适用场景</strong>：需要观察和修改复杂对象内部属性的场景。</li>
+</ul>
+<h4 id="示例-v1-风格-code-observed-code-与-code-objectlink-code">示例（V1 风格 <code>@Observed</code> 与 <code>@ObjectLink</code>）</h4><pre><code class="language-typescript">// 使用 @Observed 标记类，使其内部属性变化可被观察
+@Observed
+class UserProfile {
+  public name: string;
+  public age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+
+// 子组件
+@Component
+struct UserInfoView {
+  // 接收 @Observed 类的实例，建立双向绑定
+  @ObjectLink user: UserProfile;
+
+  build() {
+    Column() {
+      Text(`Name: ${this.user.name}`)
+      Button(&#39;Change Name&#39;)
+        .onClick(() =&gt; {
+          this.user.name = &#39;New Name&#39;; // 修改对象属性，UI 会刷新
+        })
+    }
+  }
+}
+
+// 父组件
+@Entry
+@Component
+struct MainPage {
+  // 创建被 @Observed 修饰的类的实例
+  @State userProfile: UserProfile = new UserProfile(&#39;John&#39;, 25);
+
+  build() {
+    UserInfoView({ user: this.userProfile })
+  }
+}
+</code></pre>
+<hr>
+<h2 id="关于字符串别名与全局变量的疑问解答">关于字符串别名与全局变量的疑问解答</h2><h3 id="为什么使用字符串-如-code-39-key-39-code-而非直接使用全局变量">为什么使用字符串（如 <code>&#39;key&#39;</code>）而非直接使用全局变量？</h3><ul>
+<li><p><strong>原因 1：响应式需求</strong><br>普通 JavaScript/TypeScript 变量（如 <code>export let count = 0</code>）变化时，ArkUI 框架无法感知，因此 <strong>不会触发 UI 更新</strong>。</p>
+</li>
+<li><p><strong>原因 2：AppStorage 的本质</strong><br><code>AppStorage</code> 内部维护了一个 <strong>响应式哈希表</strong>，字符串 <code>&#39;key&#39;</code> 是定位数据的唯一标识符。你可以把它理解为一个自带“脏检查通知机制”的全局 <code>Map</code>。</p>
+</li>
+<li><p><strong>解决方案：使用常量或枚举管理 Key</strong><br>为避免魔法字符串带来的维护问题，建议使用常量或枚举统一管理。</p>
+</li>
+</ul>
+<pre><code class="language-typescript">// 定义常量，作为唯一数据源
+export class StorageKeys {
+  static readonly USER_INFO = &#39;app_user_info_v1&#39;;
+  static readonly THEME_MODE = &#39;app_theme_mode&#39;;
+}
+
+// 初始化
+AppStorage.setOrCreate(StorageKeys.USER_INFO, { name: &#39;Guest&#39; });
+
+// 组件中使用常量
+@Component
+struct MyPage {
+  @StorageLink(StorageKeys.USER_INFO) userInfo: UserType = { name: &#39;&#39; };
+  // IDE 有智能提示，重构时改一处全项目生效
+  build() { /* ... */ }
+}
+</code></pre>
+<h3 id="关于-code-provide-39-alias-39-code-别名的意义">关于 <code>@Provide(&#39;alias&#39;)</code> 别名的意义</h3><p>别名主要用于 <strong>解耦组件层级与具体变量名</strong>。例如，父组件内部变量名为 <code>name</code>，但子组件希望以 <code>userName</code> 来消费它：</p>
+<pre><code class="language-typescript">// 父组件
+@Provide(&#39;userNameAlias&#39;) name: string = &#39;Alice&#39;;
+
+// 子组件
+@Consume(&#39;userNameAlias&#39;) displayName: string;
+</code></pre>
+<p>这在封装第三方组件库或不想暴露内部命名细节时非常有用。</p>
+<hr>
+<h2 id="注意事项与最佳实践">注意事项与最佳实践</h2><ol>
+<li><p><strong>版本选择</strong>  </p>
+<ul>
+<li>新项目若需支持低版本设备（API 11 及以下），优先使用 V1。  </li>
+<li>仅针对 API 12+ 设备的项目，可全面采用 V2 以获得更好的性能。</li>
+</ul>
+</li>
+<li><p><strong>性能优化</strong>  </p>
+<ul>
+<li>避免将未绑定 UI 的变量声明为状态变量，以减少不必要的刷新开销。  </li>
+<li>在列表渲染等高频场景中，V2 的 <code>@Trace</code> 可实现属性级精准更新，性能更优。</li>
+</ul>
+</li>
+<li><p><strong>对象传递</strong>  </p>
+<ul>
+<li><code>@Prop</code> 会对传入的对象进行 <strong>深拷贝</strong>，开销较大；而 <code>@ObjectLink</code> 传递的是引用。若无需深拷贝，优先使用 <code>@ObjectLink</code>。</li>
+</ul>
+</li>
+<li><p><strong>正确初始化</strong>  </p>
+<ul>
+<li><code>@Link</code> 和 <code>@ObjectLink</code> 装饰的变量必须在父组件中被正确初始化，否则运行时将报错。</li>
+</ul>
+</li>
+<li><p><strong>避免魔法字符串</strong>  </p>
+<ul>
+<li>使用常量或枚举管理所有 <code>AppStorage</code> / <code>LocalStorage</code> 的 Key，提升代码可维护性。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="装饰器速查表">装饰器速查表</h2><table>
+<thead>
+<tr>
+<th align="left">装饰器组合 / 类型</th>
+<th align="left">作用域</th>
+<th align="left">数据流向</th>
+<th align="left">典型场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>@State</code></td>
+<td align="left">组件内部</td>
+<td align="left">数据 → UI</td>
+<td align="left">计数器、开关状态</td>
+</tr>
+<tr>
+<td align="left"><code>@State</code> + <code>@Link</code></td>
+<td align="left">父子组件</td>
+<td align="left">双向 (父 ↔ 子)</td>
+<td align="left">表单输入、滑块值同步</td>
+</tr>
+<tr>
+<td align="left"><code>@State</code> + <code>@Prop</code></td>
+<td align="left">父子组件</td>
+<td align="left">单向 (父 → 子)</td>
+<td align="left">标题展示、状态文本</td>
+</tr>
+<tr>
+<td align="left"><code>@Provide</code> + <code>@Consume</code></td>
+<td align="left">跨层级组件</td>
+<td align="left">双向 (祖先 ↔ 后代)</td>
+<td align="left">主题切换、全局设置</td>
+</tr>
+<tr>
+<td align="left"><code>@Observed</code> + <code>@ObjectLink</code></td>
+<td align="left">组件间</td>
+<td align="left">双向 (对象属性 ↔ UI)</td>
+<td align="left">复杂对象内部属性修改</td>
+</tr>
+<tr>
+<td align="left"><code>@StorageLink</code></td>
+<td align="left">全应用</td>
+<td align="left">双向 (组件 ↔ AppStorage)</td>
+<td align="left">用户信息、全局开关</td>
+</tr>
+<tr>
+<td align="left"><code>@StorageProp</code></td>
+<td align="left">全应用</td>
+<td align="left">单向 (AppStorage → 组件)</td>
+<td align="left">仅读取全局配置</td>
+</tr>
+<tr>
+<td align="left"><code>@LocalStorageLink</code></td>
+<td align="left">当前页面</td>
+<td align="left">双向 (组件 ↔ LocalStorage)</td>
+<td align="left">页面内共享状态</td>
+</tr>
+<tr>
+<td align="left"><code>@LocalStorageProp</code></td>
+<td align="left">当前页面</td>
+<td align="left">单向 (LocalStorage → 组件)</td>
+<td align="left">页面级只读配置</td>
+</tr>
+</tbody></table>
+<hr>
+<blockquote>
+<p>本文档基于 ArkUI 状态管理 V1 与 V2 特性编写，适用于 HarmonyOS 应用开发入门学习。建议结合实际项目练习，逐步掌握各装饰器的使用场景。</p>
+</blockquote>
+</div>
+                    <div class="article-footer">
+                        <a href="/" class="back-link">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
+        var idCounter = {};
+        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.article-toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
+    </script>
+</body>
+</html>

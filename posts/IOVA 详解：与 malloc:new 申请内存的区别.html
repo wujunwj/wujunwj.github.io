@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOVA 详解：与 malloc/new 申请内存的区别 | TechBlog</title>
+    <meta name="description" content="IOVA 详解：与 malloc/new 申请内存的区别">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+            <nav class="header-nav">
+                <a href="/">首页</a>
+                <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">专栏</div>
+                <ul class="sidebar-nav">
+                    <a href="/categories/c.html">C++</a>
+<a href="/categories/gpu.html">GPU</a>
+<a href="/categories/ohos.html">ohos</a>
+<a href="/categories/工具.html">工具</a>
+<a href="/categories/显示基础.html">显示基础</a>
+<a href="/categories/linux.html">Linux</a>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">最近文章</div>
+                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
+<li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
+<li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
+<li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+            </div>
+        </aside>
+        <main class="main">
+            <div class="content post-layout">
+                <div class="article-toc">
+                    <div class="article-toc-title">目录</div>
+                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-iova-是什么">1. IOVA 是什么？</a><ul><li class="article-toc-h3"><a href="#核心原理">核心原理</a></li><li class="article-toc-h3"><a href="#简单类比">简单类比</a></li></ul></li><li class="article-toc-h2"><a href="#2-与-malloc-new-申请的内存的区别">2. 与 malloc / new 申请的内存的区别</a></li><li class="article-toc-h2"><a href="#3-关键区别详解">3. 关键区别详解</a><ul><li class="article-toc-h3"><a href="#3-1-目的和使用者不同">3.1 目的和使用者不同</a></li><li class="article-toc-h3"><a href="#3-2-生命周期和管理不同">3.2 生命周期和管理不同</a></li><li class="article-toc-h3"><a href="#3-3-地址值的可能关系">3.3 地址值的可能关系</a></li></ul></li><li class="article-toc-h2"><a href="#4-生动示例-gpu-纹理传输">4. 生动示例：GPU 纹理传输</a></li><li class="article-toc-h2"><a href="#5-总结对比表">5. 总结对比表</a></li></ul>
+                </div>
+                <article class="post-content">
+                    <div class="article-header">
+                        <h1 class="article-title">IOVA 详解：与 malloc/new 申请内存的区别</h1>
+                        <div class="article-meta">
+                            <span>{2026-04-19}</span>
+                            <span>C++</span>
+                        </div>
+                    </div>
+                    <div class="article-body"><h1 id="iova-详解-与-malloc-new-申请内存的区别">IOVA 详解：与 malloc/new 申请内存的区别</h1><h2 id="1-iova-是什么">1. IOVA 是什么？</h2><p><strong>IOVA</strong> 的全称是 <strong>I/O Virtual Address</strong>，即 <strong>输入输出虚拟地址</strong>。</p>
+<p>它是一种在 <strong>IOMMU（输入输出内存管理单元）</strong> 环境下使用的地址概念。可以理解为：<strong>专门给设备（如网卡、GPU、磁盘控制器）使用的“虚拟地址”</strong>。</p>
+<h3 id="核心原理">核心原理</h3><ul>
+<li>应用程序使用的指针是<strong>虚拟地址（VA）</strong>，CPU 通过 <strong>MMU</strong> 将 VA 转换成<strong>物理地址（PA）</strong> 访问内存。</li>
+<li>设备进行 DMA 操作时，本应提供物理地址。但为了安全和灵活，引入 <strong>IOMMU</strong>：设备提供 <strong>IOVA</strong>，IOMMU 将 IOVA 翻译成真实的物理地址。</li>
+</ul>
+<h3 id="简单类比">简单类比</h3><ul>
+<li><strong>CPU</strong> 使用 <strong>虚拟地址(VA)</strong>，经 <strong>MMU</strong> → 物理地址</li>
+<li><strong>设备</strong> 使用 <strong>IOVA</strong>，经 <strong>IOMMU</strong> → 物理地址</li>
+</ul>
+<h2 id="2-与-malloc-new-申请的内存的区别">2. 与 malloc / new 申请的内存的区别</h2><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">malloc() / new 申请的内存</th>
+<th align="left">IOVA</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>面向对象</strong></td>
+<td align="left">CPU（应用程序）</td>
+<td align="left">设备（DMA 引擎）</td>
+</tr>
+<tr>
+<td align="left"><strong>地址类型</strong></td>
+<td align="left">进程虚拟地址（VA）</td>
+<td align="left">IO 虚拟地址（IOVA）</td>
+</tr>
+<tr>
+<td align="left"><strong>转换单元</strong></td>
+<td align="left">MMU</td>
+<td align="left">IOMMU</td>
+</tr>
+<tr>
+<td align="left"><strong>作用域</strong></td>
+<td align="left">当前进程内部，进程结束则失效</td>
+<td align="left">系统级或设备级，与设备/IOMMU 域绑定</td>
+</tr>
+<tr>
+<td align="left"><strong>管理方式</strong></td>
+<td align="left">C 库或内核内存管理器自动管理</td>
+<td align="left">设备驱动程序通过内核 DMA API 显式分配和映射</td>
+</tr>
+<tr>
+<td align="left"><strong>目的</strong></td>
+<td align="left">为应用程序提供安全、隔离的内存视图</td>
+<td align="left">为硬件设备提供安全、隔离的 DMA 操作视图，并解决硬件寻址限制</td>
+</tr>
+</tbody></table>
+<h2 id="3-关键区别详解">3. 关键区别详解</h2><h3 id="3-1-目的和使用者不同">3.1 目的和使用者不同</h3><ul>
+<li><code>malloc</code> / <code>new</code> 是<strong>给应用程序的 CPU 代码使用</strong>，返回的指针只有当前进程的 CPU 能理解。</li>
+<li><strong>IOVA</strong> 是<strong>给设备使用</strong>，驱动程序将 IOVA 写入设备寄存器，设备才知道 DMA 数据的存放位置。</li>
+</ul>
+<h3 id="3-2-生命周期和管理不同">3.2 生命周期和管理不同</h3><ul>
+<li>应用程序直接调用 <code>malloc</code> / <code>free</code> 管理内存。</li>
+<li>驱动程序中 IOVA 的典型使用流程：<ol>
+<li><strong>分配 CPU 可访问的内存</strong>（例如 <code>kmalloc</code>、<code>posix_memalign</code>）。</li>
+<li><strong>调用 DMA 映射 API</strong>（如 <code>dma_map_single()</code>）：<ul>
+<li>确保设备 DMA 能访问连续的地址空间（即使物理内存碎片化，IOMMU 页表可映射为连续 IOVA）。</li>
+<li>返回一个 <strong>IOVA</strong> 地址。</li>
+</ul>
+</li>
+<li><strong>将 IOVA 写入设备寄存器</strong>，启动 DMA 传输。</li>
+<li><strong>DMA 完成后，调用 <code>dma_unmap_single()</code></strong> 解除映射。</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-3-地址值的可能关系">3.3 地址值的可能关系</h3><ul>
+<li><strong>无 IOMMU 的简单系统</strong>：驱动可能直接使用物理地址作为 IOVA（IOVA == PA）。</li>
+<li><strong>有 IOMMU 的复杂系统</strong>：IOVA 与物理地址（PA）及应用程序的虚拟地址（VA）<strong>无直接数学关系</strong>，仅是设备视角的“门牌号”，由 IOMMU 完成翻译。</li>
+</ul>
+<h2 id="4-生动示例-gpu-纹理传输">4. 生动示例：GPU 纹理传输</h2><p>假设游戏需要将纹理数据传给 GPU：</p>
+<ol>
+<li><strong>应用程序</strong>：调用 <code>new</code> 或 <code>malloc</code> 申请内存存储纹理 → 得到 <strong>VA</strong>。</li>
+<li><strong>CPU</strong>：使用该 VA，通过 MMU 找到物理内存，写入纹理数据。</li>
+<li><strong>驱动程序</strong>：<ul>
+<li>确保该内存可进行 DMA。</li>
+<li>调用 <code>dma_map_single()</code>（或 GPU 专用 API）得到 <strong>IOVA</strong>。</li>
+<li>将 IOVA 发送给 GPU：“请从该地址读取纹理数据”。</li>
+</ul>
+</li>
+<li><strong>GPU 与 IOMMU</strong>：GPU 的 DMA 引擎看到 IOVA，交给 IOMMU。</li>
+<li><strong>IOMMU</strong>：查找自身页表，将 IOVA 翻译为 <strong>物理地址（PA）</strong>，GPU 最终访问内存。</li>
+</ol>
+<h2 id="5-总结对比表">5. 总结对比表</h2><table>
+<thead>
+<tr>
+<th align="left">概念</th>
+<th align="left">角色</th>
+<th align="left">翻译者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>虚拟地址 (VA)</strong></td>
+<td align="left">CPU 看到的地址</td>
+<td align="left">MMU</td>
+</tr>
+<tr>
+<td align="left"><strong>物理地址 (PA)</strong></td>
+<td align="left">内存芯片上的真实地址</td>
+<td align="left">无需翻译</td>
+</tr>
+<tr>
+<td align="left"><strong>IO 虚拟地址 (IOVA)</strong></td>
+<td align="left">设备进行 DMA 时看到的地址</td>
+<td align="left">IOMMU</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>malloc</code> / <code>new</code>：为<strong>应用程序和 CPU</strong> 提供内存。</li>
+<li><strong>IOVA</strong>：为<strong>设备 DMA 操作</strong> 提供中间层地址，由驱动程序通过内核 DMA API 管理，主要目的：<strong>增强安全性（设备隔离）、提供灵活性（应对物理内存碎片）、兼容性（解决 32 位设备 DMA 寻址限制）</strong>。</li>
+</ul>
+<blockquote>
+<p>一句话：<strong>VA 是给 CPU 看的“假地址”，IOVA 是给设备看的“假地址”，PA 才是内存的“真地址”</strong>。两者都是虚拟化技术在不同领域的体现。</p>
+</blockquote>
+</div>
+                    <div class="article-footer">
+                        <a href="/" class="back-link">← 返回首页</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+    </footer>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                btn.textContent = '🌙';
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                btn.textContent = '☀️';
+            }
+        }
+        const saved = localStorage.getItem('theme');
+        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+
+        function slugify(text) {
+            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        
+        var idCounter = {};
+        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
+        const tocLinks = document.querySelectorAll('.article-toc-list a');
+        
+        function updateActiveHeading() {
+            let current = '';
+            headings.forEach(heading => {
+                const rect = heading.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    current = heading.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveHeading);
+        updateActiveHeading();
+    </script>
+</body>
+</html>
