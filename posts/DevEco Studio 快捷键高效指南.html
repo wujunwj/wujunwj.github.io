@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevEco Studio 快捷键高效指南 | TechBlog</title>
-    <meta name="description" content="DevEco Studio 快捷键高效指南（按使用频率排序）">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevEco Studio 快捷键高效指南 | TechBlog</title>
+  <meta name="description" content="DevEco Studio 快捷键高效指南（按使用频率排序）">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">DevEco Studio 快捷键高效指南</h1>
+            <div class="article-meta">
+              <span>{2026-04-19}</span>
+              <span><span class="category-badge">ohos</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#deveco-studio-快捷键高效指南-按使用频率排序">DevEco Studio 快捷键高效指南（按使用频率排序）</a></li><li class="article-toc-h2"><a href="#前言">前言</a></li><li class="article-toc-h2"><a href="#一-编辑类快捷键-最高频">一、编辑类快捷键（最高频）</a></li><li class="article-toc-h2"><a href="#二-查找与替换">二、查找与替换</a></li><li class="article-toc-h2"><a href="#三-代码导航">三、代码导航</a></li><li class="article-toc-h2"><a href="#四-重构操作">四、重构操作</a></li><li class="article-toc-h2"><a href="#五-运行与调试">五、运行与调试</a></li><li class="article-toc-h2"><a href="#六-其他高效辅助功能">六、其他高效辅助功能</a></li><li class="article-toc-h2"><a href="#七-自定义快捷键指南">七、自定义快捷键指南</a></li><li class="article-toc-h2"><a href="#八-实战工作流建议">八、实战工作流建议</a><ul><li class="article-toc-h3"><a href="#1-代码修复与清理流">1. 代码修复与清理流</a></li><li class="article-toc-h3"><a href="#2-逻辑调试定位流">2. 逻辑调试定位流</a></li><li class="article-toc-h3"><a href="#3-模板代码生成流">3. 模板代码生成流</a></li></ul></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">DevEco Studio 快捷键高效指南</h1>
-                        <div class="article-meta">
-                            <span>{2026-04-19}</span>
-                            <span>ohos</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h2 id="deveco-studio-快捷键高效指南-按使用频率排序">DevEco Studio 快捷键高效指南（按使用频率排序）</h2><h2 id="前言">前言</h2><p>DevEco Studio 是 HarmonyOS 应用开发的官方 IDE，它基于 IntelliJ IDEA 平台构建，因此快捷键体系与 IntelliJ IDEA 高度兼容。熟练掌握快捷键是提升编码效率、减少鼠标操作、专注于逻辑实现的关键一步。</p>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#deveco-studio-快捷键高效指南-按使用频率排序">DevEco Studio 快捷键高效指南（按使用频率排序）</a></li><li class="article-toc-h2"><a href="#前言">前言</a></li><li class="article-toc-h2"><a href="#一-编辑类快捷键-最高频">一、编辑类快捷键（最高频）</a></li><li class="article-toc-h2"><a href="#二-查找与替换">二、查找与替换</a></li><li class="article-toc-h2"><a href="#三-代码导航">三、代码导航</a></li><li class="article-toc-h2"><a href="#四-重构操作">四、重构操作</a></li><li class="article-toc-h2"><a href="#五-运行与调试">五、运行与调试</a></li><li class="article-toc-h2"><a href="#六-其他高效辅助功能">六、其他高效辅助功能</a></li><li class="article-toc-h2"><a href="#七-自定义快捷键指南">七、自定义快捷键指南</a></li><li class="article-toc-h2"><a href="#八-实战工作流建议">八、实战工作流建议</a><ul><li class="article-toc-h3"><a href="#1-代码修复与清理流">1. 代码修复与清理流</a></li><li class="article-toc-h3"><a href="#2-逻辑调试定位流">2. 逻辑调试定位流</a></li><li class="article-toc-h3"><a href="#3-模板代码生成流">3. 模板代码生成流</a></li></ul></li></ul>
+          </details>
+
+          <div class="article-body"><h2 id="deveco-studio-快捷键高效指南-按使用频率排序">DevEco Studio 快捷键高效指南（按使用频率排序）</h2><h2 id="前言">前言</h2><p>DevEco Studio 是 HarmonyOS 应用开发的官方 IDE，它基于 IntelliJ IDEA 平台构建，因此快捷键体系与 IntelliJ IDEA 高度兼容。熟练掌握快捷键是提升编码效率、减少鼠标操作、专注于逻辑实现的关键一步。</p>
 <p>本文档按照日常开发中的使用频率，将快捷键分为<strong>编辑、查找替换、导航、重构、运行调试</strong>等核心模块，并提供了实用技巧，帮助新手快速上手，老手查漏补缺。</p>
 <blockquote>
 <p><strong>提示</strong>：下方表格中 <code>⌘</code> 代表 Command 键，<code>Option</code> 代表 Alt 键，<code>Control</code> 代表 Ctrl 键。</p>
@@ -401,59 +405,45 @@
 <p><strong>结语</strong>：这份指南覆盖了日常鸿蒙应用开发中 95% 以上的高频操作。建议初学者先重点掌握 <strong>第一部分（编辑）</strong> 和 <strong>第二部分（查找）</strong>，随着项目经验的增加，逐步练习重构与调试快捷键。坚持使用一周，你会发现敲代码的流畅度将有质的飞跃。</p>
 </blockquote>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#deveco-studio-快捷键高效指南-按使用频率排序">DevEco Studio 快捷键高效指南（按使用频率排序）</a></li><li class="article-toc-h2"><a href="#前言">前言</a></li><li class="article-toc-h2"><a href="#一-编辑类快捷键-最高频">一、编辑类快捷键（最高频）</a></li><li class="article-toc-h2"><a href="#二-查找与替换">二、查找与替换</a></li><li class="article-toc-h2"><a href="#三-代码导航">三、代码导航</a></li><li class="article-toc-h2"><a href="#四-重构操作">四、重构操作</a></li><li class="article-toc-h2"><a href="#五-运行与调试">五、运行与调试</a></li><li class="article-toc-h2"><a href="#六-其他高效辅助功能">六、其他高效辅助功能</a></li><li class="article-toc-h2"><a href="#七-自定义快捷键指南">七、自定义快捷键指南</a></li><li class="article-toc-h2"><a href="#八-实战工作流建议">八、实战工作流建议</a><ul><li class="article-toc-h3"><a href="#1-代码修复与清理流">1. 代码修复与清理流</a></li><li class="article-toc-h3"><a href="#2-逻辑调试定位流">2. 逻辑调试定位流</a></li><li class="article-toc-h3"><a href="#3-模板代码生成流">3. 模板代码生成流</a></li></ul></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

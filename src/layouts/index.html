@@ -1,75 +1,84 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechBlog - 技术博客</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechBlog - 技术博客</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/" class="active">首页</a>
-                {{category-nav}}
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    {{category-nav}}
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav">{{recent-posts}}</ul>
-            </div>
-        </aside>
-        <main class="main">
-            <div class="content">
-                <div class="hero">
-                    <h1 class="hero-title">TechBlog</h1>
-                    <p class="hero-subtitle">探索 Linux、C++、图形学与 GPU 的技术世界</p>
-                </div>
-                <h2 style="margin-bottom: 10px; font-size: 15px;">专栏</h2>
-                <div class="categories-grid">
-                    {{category-cards}}
-                </div>
-                <h2 style="margin: 16px 0 10px; font-size: 15px;">最新文章</h2>
-                <div class="posts-list">{{posts}}</div>
-            </div>
-        </main>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/" class="active">首页</a>
+        {{category-nav}}
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
     </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
-    </script>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav">{{category-nav}}</ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav">{{recent-posts}}</ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="content">
+        <div class="hero">
+          <h1 class="hero-title">TechBlog</h1>
+          <p class="hero-subtitle">探索 Linux、C++、图形学与 GPU 的技术世界</p>
+        </div>
+
+        <div class="section-header"><h2>专栏</h2></div>
+        <div class="categories-grid">{{category-cards}}</div>
+
+        <div class="section-header"><h2>最新文章</h2></div>
+        <div class="posts-list">{{posts}}</div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

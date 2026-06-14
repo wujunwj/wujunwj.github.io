@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git 与 GitHub 入门指南 | TechBlog</title>
-    <meta name="description" content="Git 与 GitHub 入门指南">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git 与 GitHub 入门指南 | TechBlog</title>
+  <meta name="description" content="Git 与 GitHub 入门指南">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">Git 与 GitHub 入门指南</h1>
+            <div class="article-meta">
+              <span>{2026-04-19}</span>
+              <span><span class="category-badge">工具</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-准备工作-安装与配置">一、准备工作：安装与配置</a><ul><li class="article-toc-h3"><a href="#1-安装-git">1. 安装 Git</a></li><li class="article-toc-h3"><a href="#2-配置用户信息">2. 配置用户信息</a></li></ul></li><li class="article-toc-h2"><a href="#二-创建本地仓库与首次提交">二、创建本地仓库与首次提交</a><ul><li class="article-toc-h3"><a href="#1-初始化仓库">1. 初始化仓库</a></li><li class="article-toc-h3"><a href="#2-添加文件到暂存区">2. 添加文件到暂存区</a></li><li class="article-toc-h3"><a href="#3-提交到本地仓库">3. 提交到本地仓库</a></li><li class="article-toc-h3"><a href="#4-查看状态与历史">4. 查看状态与历史</a></li></ul></li><li class="article-toc-h2"><a href="#三-连接远程仓库-github">三、连接远程仓库（GitHub）</a><ul><li class="article-toc-h3"><a href="#1-在-github-上创建仓库">1. 在 GitHub 上创建仓库</a></li><li class="article-toc-h3"><a href="#2-关联本地仓库与远程仓库">2. 关联本地仓库与远程仓库</a></li><li class="article-toc-h3"><a href="#3-首次推送到-github">3. 首次推送到 GitHub</a></li><li class="article-toc-h3"><a href="#4-后续更新同步">4. 后续更新同步</a></li><li class="article-toc-h3"><a href="#5-拉取远程更新">5. 拉取远程更新</a></li></ul></li><li class="article-toc-h2"><a href="#四-分支-branch-详解">四、分支（Branch）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是分支">1. 什么是分支？</a></li><li class="article-toc-h3"><a href="#2-为什么要用分支">2. 为什么要用分支？</a></li><li class="article-toc-h3"><a href="#3-常用分支操作命令">3. 常用分支操作命令</a></li><li class="article-toc-h3"><a href="#4-典型分支工作流示例">4. 典型分支工作流示例</a></li></ul></li><li class="article-toc-h2"><a href="#五-pull-request-pr-详解">五、Pull Request（PR）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是-pull-request">1. 什么是 Pull Request？</a></li><li class="article-toc-h3"><a href="#2-为什么需要-pr">2. 为什么需要 PR？</a></li><li class="article-toc-h3"><a href="#3-pr-的标准流程-以-github-为例">3. PR 的标准流程（以 GitHub 为例）</a></li><li class="article-toc-h3"><a href="#4-个人项目是否需要-pr">4. 个人项目是否需要 PR？</a></li><li class="article-toc-h3"><a href="#5-结合分支与-pr-的完整协作示例">5. 结合分支与 PR 的完整协作示例</a></li></ul></li><li class="article-toc-h2"><a href="#六-常见问题与最佳实践">六、常见问题与最佳实践</a><ul><li class="article-toc-h3"><a href="#1-写好提交信息">1. 写好提交信息</a></li><li class="article-toc-h3"><a href="#2-用好-gitignore">2. 用好 `.gitignore`</a></li><li class="article-toc-h3"><a href="#3-分支命名建议">3. 分支命名建议</a></li><li class="article-toc-h3"><a href="#4-保持分支与主分支同步">4. 保持分支与主分支同步</a></li><li class="article-toc-h3"><a href="#5-撤销与回退-常用">5. 撤销与回退（常用）</a></li></ul></li><li class="article-toc-h2"><a href="#七-速查表">七、速查表</a></li><li class="article-toc-h2"><a href="#八-总结">八、总结</a></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">Git 与 GitHub 入门指南</h1>
-                        <div class="article-meta">
-                            <span>{2026-04-19}</span>
-                            <span>工具</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h1 id="git-与-github-入门指南-含分支与-pull-request-详解">Git 与 GitHub 入门指南（含分支与 Pull Request 详解）</h1><blockquote>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-准备工作-安装与配置">一、准备工作：安装与配置</a><ul><li class="article-toc-h3"><a href="#1-安装-git">1. 安装 Git</a></li><li class="article-toc-h3"><a href="#2-配置用户信息">2. 配置用户信息</a></li></ul></li><li class="article-toc-h2"><a href="#二-创建本地仓库与首次提交">二、创建本地仓库与首次提交</a><ul><li class="article-toc-h3"><a href="#1-初始化仓库">1. 初始化仓库</a></li><li class="article-toc-h3"><a href="#2-添加文件到暂存区">2. 添加文件到暂存区</a></li><li class="article-toc-h3"><a href="#3-提交到本地仓库">3. 提交到本地仓库</a></li><li class="article-toc-h3"><a href="#4-查看状态与历史">4. 查看状态与历史</a></li></ul></li><li class="article-toc-h2"><a href="#三-连接远程仓库-github">三、连接远程仓库（GitHub）</a><ul><li class="article-toc-h3"><a href="#1-在-github-上创建仓库">1. 在 GitHub 上创建仓库</a></li><li class="article-toc-h3"><a href="#2-关联本地仓库与远程仓库">2. 关联本地仓库与远程仓库</a></li><li class="article-toc-h3"><a href="#3-首次推送到-github">3. 首次推送到 GitHub</a></li><li class="article-toc-h3"><a href="#4-后续更新同步">4. 后续更新同步</a></li><li class="article-toc-h3"><a href="#5-拉取远程更新">5. 拉取远程更新</a></li></ul></li><li class="article-toc-h2"><a href="#四-分支-branch-详解">四、分支（Branch）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是分支">1. 什么是分支？</a></li><li class="article-toc-h3"><a href="#2-为什么要用分支">2. 为什么要用分支？</a></li><li class="article-toc-h3"><a href="#3-常用分支操作命令">3. 常用分支操作命令</a></li><li class="article-toc-h3"><a href="#4-典型分支工作流示例">4. 典型分支工作流示例</a></li></ul></li><li class="article-toc-h2"><a href="#五-pull-request-pr-详解">五、Pull Request（PR）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是-pull-request">1. 什么是 Pull Request？</a></li><li class="article-toc-h3"><a href="#2-为什么需要-pr">2. 为什么需要 PR？</a></li><li class="article-toc-h3"><a href="#3-pr-的标准流程-以-github-为例">3. PR 的标准流程（以 GitHub 为例）</a></li><li class="article-toc-h3"><a href="#4-个人项目是否需要-pr">4. 个人项目是否需要 PR？</a></li><li class="article-toc-h3"><a href="#5-结合分支与-pr-的完整协作示例">5. 结合分支与 PR 的完整协作示例</a></li></ul></li><li class="article-toc-h2"><a href="#六-常见问题与最佳实践">六、常见问题与最佳实践</a><ul><li class="article-toc-h3"><a href="#1-写好提交信息">1. 写好提交信息</a></li><li class="article-toc-h3"><a href="#2-用好-gitignore">2. 用好 `.gitignore`</a></li><li class="article-toc-h3"><a href="#3-分支命名建议">3. 分支命名建议</a></li><li class="article-toc-h3"><a href="#4-保持分支与主分支同步">4. 保持分支与主分支同步</a></li><li class="article-toc-h3"><a href="#5-撤销与回退-常用">5. 撤销与回退（常用）</a></li></ul></li><li class="article-toc-h2"><a href="#七-速查表">七、速查表</a></li><li class="article-toc-h2"><a href="#八-总结">八、总结</a></li></ul>
+          </details>
+
+          <div class="article-body"><h1 id="git-与-github-入门指南-含分支与-pull-request-详解">Git 与 GitHub 入门指南（含分支与 Pull Request 详解）</h1><blockquote>
 <p>本文档面向 Git 初学者，涵盖从安装配置、创建仓库、同步代码，到理解分支与 Pull Request 的完整流程。每一条命令都附有参数解释和目的说明。</p>
 </blockquote>
 <hr>
@@ -406,59 +410,45 @@ git merge main   # 将 main 的最新改动合并到当前分支
 </blockquote>
 <p><strong>祝你 Git 之旅顺利！</strong></p>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-准备工作-安装与配置">一、准备工作：安装与配置</a><ul><li class="article-toc-h3"><a href="#1-安装-git">1. 安装 Git</a></li><li class="article-toc-h3"><a href="#2-配置用户信息">2. 配置用户信息</a></li></ul></li><li class="article-toc-h2"><a href="#二-创建本地仓库与首次提交">二、创建本地仓库与首次提交</a><ul><li class="article-toc-h3"><a href="#1-初始化仓库">1. 初始化仓库</a></li><li class="article-toc-h3"><a href="#2-添加文件到暂存区">2. 添加文件到暂存区</a></li><li class="article-toc-h3"><a href="#3-提交到本地仓库">3. 提交到本地仓库</a></li><li class="article-toc-h3"><a href="#4-查看状态与历史">4. 查看状态与历史</a></li></ul></li><li class="article-toc-h2"><a href="#三-连接远程仓库-github">三、连接远程仓库（GitHub）</a><ul><li class="article-toc-h3"><a href="#1-在-github-上创建仓库">1. 在 GitHub 上创建仓库</a></li><li class="article-toc-h3"><a href="#2-关联本地仓库与远程仓库">2. 关联本地仓库与远程仓库</a></li><li class="article-toc-h3"><a href="#3-首次推送到-github">3. 首次推送到 GitHub</a></li><li class="article-toc-h3"><a href="#4-后续更新同步">4. 后续更新同步</a></li><li class="article-toc-h3"><a href="#5-拉取远程更新">5. 拉取远程更新</a></li></ul></li><li class="article-toc-h2"><a href="#四-分支-branch-详解">四、分支（Branch）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是分支">1. 什么是分支？</a></li><li class="article-toc-h3"><a href="#2-为什么要用分支">2. 为什么要用分支？</a></li><li class="article-toc-h3"><a href="#3-常用分支操作命令">3. 常用分支操作命令</a></li><li class="article-toc-h3"><a href="#4-典型分支工作流示例">4. 典型分支工作流示例</a></li></ul></li><li class="article-toc-h2"><a href="#五-pull-request-pr-详解">五、Pull Request（PR）详解</a><ul><li class="article-toc-h3"><a href="#1-什么是-pull-request">1. 什么是 Pull Request？</a></li><li class="article-toc-h3"><a href="#2-为什么需要-pr">2. 为什么需要 PR？</a></li><li class="article-toc-h3"><a href="#3-pr-的标准流程-以-github-为例">3. PR 的标准流程（以 GitHub 为例）</a></li><li class="article-toc-h3"><a href="#4-个人项目是否需要-pr">4. 个人项目是否需要 PR？</a></li><li class="article-toc-h3"><a href="#5-结合分支与-pr-的完整协作示例">5. 结合分支与 PR 的完整协作示例</a></li></ul></li><li class="article-toc-h2"><a href="#六-常见问题与最佳实践">六、常见问题与最佳实践</a><ul><li class="article-toc-h3"><a href="#1-写好提交信息">1. 写好提交信息</a></li><li class="article-toc-h3"><a href="#2-用好-gitignore">2. 用好 `.gitignore`</a></li><li class="article-toc-h3"><a href="#3-分支命名建议">3. 分支命名建议</a></li><li class="article-toc-h3"><a href="#4-保持分支与主分支同步">4. 保持分支与主分支同步</a></li><li class="article-toc-h3"><a href="#5-撤销与回退-常用">5. 撤销与回退（常用）</a></li></ul></li><li class="article-toc-h2"><a href="#七-速查表">七、速查表</a></li><li class="article-toc-h2"><a href="#八-总结">八、总结</a></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

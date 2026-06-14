@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event | TechBlog</title>
-    <meta name="description" content="GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event | TechBlog</title>
+  <meta name="description" content="GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</h1>
+            <div class="article-meta">
+              <span>{2026-04-19}</span>
+              <span><span class="category-badge">GPU</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-为什么需要多种同步机制">一、为什么需要多种同步机制？</a></li><li class="article-toc-h2"><a href="#二-fence-围栏">二、Fence（围栏）</a><ul><li class="article-toc-h3"><a href="#核心特征">核心特征</a></li><li class="article-toc-h3"><a href="#用途">用途</a></li><li class="article-toc-h3"><a href="#工作流程">工作流程</a></li><li class="article-toc-h3"><a href="#比喻">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#三-semaphore-信号量">三、Semaphore（信号量）</a><ul><li class="article-toc-h3"><a href="#核心特征-2">核心特征</a></li><li class="article-toc-h3"><a href="#用途-2">用途</a></li><li class="article-toc-h3"><a href="#工作流程-2">工作流程</a></li><li class="article-toc-h3"><a href="#比喻-2">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#四-barrier-屏障-内存屏障">四、Barrier（屏障 / 内存屏障）</a><ul><li class="article-toc-h3"><a href="#核心特征-3">核心特征</a></li><li class="article-toc-h3"><a href="#用途-3">用途</a></li><li class="article-toc-h3"><a href="#为什么-barrier-必不可少">为什么 Barrier 必不可少？</a></li><li class="article-toc-h3"><a href="#典型场景">典型场景</a></li><li class="article-toc-h3"><a href="#比喻-3">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#五-event-事件">五、Event（事件）</a><ul><li class="article-toc-h3"><a href="#核心特征-4">核心特征</a></li><li class="article-toc-h3"><a href="#用途-4">用途</a></li><li class="article-toc-h3"><a href="#工作流程-3">工作流程</a></li><li class="article-toc-h3"><a href="#与-barrier-的区别">与 Barrier 的区别</a></li><li class="article-toc-h3"><a href="#比喻-4">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#六-对比总结表">六、对比总结表</a></li><li class="article-toc-h2"><a href="#七-一个典型帧的协作示例">七、一个典型帧的协作示例</a></li><li class="article-toc-h2"><a href="#八-学习建议">八、学习建议</a></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</h1>
-                        <div class="article-meta">
-                            <span>{2026-04-19}</span>
-                            <span>GPU</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h1 id="gpu-渲染中的同步机制详解-fence-semaphore-barrier-与-event">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</h1><p>在 GPU 编程（特别是 Vulkan、Direct3D 12 等现代图形 API）中，同步机制是确保渲染正确性和性能的核心。不同的同步原语（Fence、Semaphore、Barrier、Event）针对不同的同步层次和场景，本文将从概念、用途、区别以及为何需要多种机制等方面进行系统讲解。</p>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-为什么需要多种同步机制">一、为什么需要多种同步机制？</a></li><li class="article-toc-h2"><a href="#二-fence-围栏">二、Fence（围栏）</a><ul><li class="article-toc-h3"><a href="#核心特征">核心特征</a></li><li class="article-toc-h3"><a href="#用途">用途</a></li><li class="article-toc-h3"><a href="#工作流程">工作流程</a></li><li class="article-toc-h3"><a href="#比喻">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#三-semaphore-信号量">三、Semaphore（信号量）</a><ul><li class="article-toc-h3"><a href="#核心特征-2">核心特征</a></li><li class="article-toc-h3"><a href="#用途-2">用途</a></li><li class="article-toc-h3"><a href="#工作流程-2">工作流程</a></li><li class="article-toc-h3"><a href="#比喻-2">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#四-barrier-屏障-内存屏障">四、Barrier（屏障 / 内存屏障）</a><ul><li class="article-toc-h3"><a href="#核心特征-3">核心特征</a></li><li class="article-toc-h3"><a href="#用途-3">用途</a></li><li class="article-toc-h3"><a href="#为什么-barrier-必不可少">为什么 Barrier 必不可少？</a></li><li class="article-toc-h3"><a href="#典型场景">典型场景</a></li><li class="article-toc-h3"><a href="#比喻-3">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#五-event-事件">五、Event（事件）</a><ul><li class="article-toc-h3"><a href="#核心特征-4">核心特征</a></li><li class="article-toc-h3"><a href="#用途-4">用途</a></li><li class="article-toc-h3"><a href="#工作流程-3">工作流程</a></li><li class="article-toc-h3"><a href="#与-barrier-的区别">与 Barrier 的区别</a></li><li class="article-toc-h3"><a href="#比喻-4">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#六-对比总结表">六、对比总结表</a></li><li class="article-toc-h2"><a href="#七-一个典型帧的协作示例">七、一个典型帧的协作示例</a></li><li class="article-toc-h2"><a href="#八-学习建议">八、学习建议</a></li></ul>
+          </details>
+
+          <div class="article-body"><h1 id="gpu-渲染中的同步机制详解-fence-semaphore-barrier-与-event">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</h1><p>在 GPU 编程（特别是 Vulkan、Direct3D 12 等现代图形 API）中，同步机制是确保渲染正确性和性能的核心。不同的同步原语（Fence、Semaphore、Barrier、Event）针对不同的同步层次和场景，本文将从概念、用途、区别以及为何需要多种机制等方面进行系统讲解。</p>
 <h2 id="一-为什么需要多种同步机制">一、为什么需要多种同步机制？</h2><p>现代 GPU 是高度并行的处理器，内部包含多个异步执行单元（图形、计算、拷贝等）。同时，CPU 和 GPU 也是异步工作的。为了在保证正确性的前提下最大化性能，API 必须提供不同粒度、不同开销的工具：</p>
 <ul>
 <li><strong>分层解耦</strong>：CPU-GPU 同步、GPU 队列间同步、队列内命令间同步是不同层次的问题，需要不同机制。</li>
@@ -203,59 +207,45 @@
 </ul>
 <p>希望本文能帮助你清晰理解这些同步机制的区别与用途，并在实际开发中正确运用它们。</p>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-为什么需要多种同步机制">一、为什么需要多种同步机制？</a></li><li class="article-toc-h2"><a href="#二-fence-围栏">二、Fence（围栏）</a><ul><li class="article-toc-h3"><a href="#核心特征">核心特征</a></li><li class="article-toc-h3"><a href="#用途">用途</a></li><li class="article-toc-h3"><a href="#工作流程">工作流程</a></li><li class="article-toc-h3"><a href="#比喻">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#三-semaphore-信号量">三、Semaphore（信号量）</a><ul><li class="article-toc-h3"><a href="#核心特征-2">核心特征</a></li><li class="article-toc-h3"><a href="#用途-2">用途</a></li><li class="article-toc-h3"><a href="#工作流程-2">工作流程</a></li><li class="article-toc-h3"><a href="#比喻-2">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#四-barrier-屏障-内存屏障">四、Barrier（屏障 / 内存屏障）</a><ul><li class="article-toc-h3"><a href="#核心特征-3">核心特征</a></li><li class="article-toc-h3"><a href="#用途-3">用途</a></li><li class="article-toc-h3"><a href="#为什么-barrier-必不可少">为什么 Barrier 必不可少？</a></li><li class="article-toc-h3"><a href="#典型场景">典型场景</a></li><li class="article-toc-h3"><a href="#比喻-3">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#五-event-事件">五、Event（事件）</a><ul><li class="article-toc-h3"><a href="#核心特征-4">核心特征</a></li><li class="article-toc-h3"><a href="#用途-4">用途</a></li><li class="article-toc-h3"><a href="#工作流程-3">工作流程</a></li><li class="article-toc-h3"><a href="#与-barrier-的区别">与 Barrier 的区别</a></li><li class="article-toc-h3"><a href="#比喻-4">比喻</a></li></ul></li><li class="article-toc-h2"><a href="#六-对比总结表">六、对比总结表</a></li><li class="article-toc-h2"><a href="#七-一个典型帧的协作示例">七、一个典型帧的协作示例</a></li><li class="article-toc-h2"><a href="#八-学习建议">八、学习建议</a></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

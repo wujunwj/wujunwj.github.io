@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C++智能指针完全指南 | TechBlog</title>
-    <meta name="description" content="C++智能指针完全指南">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++智能指针完全指南 | TechBlog</title>
+  <meta name="description" content="C++智能指针完全指南">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">C++智能指针完全指南</h1>
+            <div class="article-meta">
+              <span>{2026-04-19}</span>
+              <span><span class="category-badge">C++</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-智能指针概述">1. 智能指针概述</a></li><li class="article-toc-h2"><a href="#2-三种智能指针的区别">2. 三种智能指针的区别</a></li><li class="article-toc-h2"><a href="#3-基础示例">3. 基础示例</a><ul><li class="article-toc-h3"><a href="#3-1-std-unique_ptr-示例-独占所有权">3.1 `std::unique_ptr` 示例（独占所有权）</a></li><li class="article-toc-h3"><a href="#3-2-std-shared_ptr-示例-共享所有权">3.2 `std::shared_ptr` 示例（共享所有权）</a></li><li class="article-toc-h3"><a href="#3-3-std-weak_ptr-示例-弱引用-打破循环引用">3.3 `std::weak_ptr` 示例（弱引用，打破循环引用）</a></li></ul></li><li class="article-toc-h2"><a href="#4-std-unique_ptr-详细使用场景">4. `std::unique_ptr` 详细使用场景</a><ul><li class="article-toc-h3"><a href="#4-1-工厂函数返回动态对象">4.1 工厂函数返回动态对象</a></li><li class="article-toc-h3"><a href="#4-2-作为类的成员变量-表达独占包含关系-如链表节点">4.2 作为类的成员变量，表达独占包含关系（如链表节点）</a></li><li class="article-toc-h3"><a href="#4-3-在多态容器中存储派生类对象">4.3 在多态容器中存储派生类对象</a></li><li class="article-toc-h3"><a href="#4-4-实现-pimpl-惯用法-隐藏实现细节">4.4 实现 PImpl 惯用法（隐藏实现细节）</a></li><li class="article-toc-h3"><a href="#4-5-自定义删除器处理特殊资源-如文件句柄">4.5 自定义删除器处理特殊资源（如文件句柄）</a></li><li class="article-toc-h3"><a href="#4-6-作为函数参数传递所有权">4.6 作为函数参数传递所有权</a></li></ul></li><li class="article-toc-h2"><a href="#5-总结">5. 总结</a></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">C++智能指针完全指南</h1>
-                        <div class="article-meta">
-                            <span>{2026-04-19}</span>
-                            <span>C++</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h1 id="c-智能指针完全指南">C++智能指针完全指南</h1><h2 id="1-智能指针概述">1. 智能指针概述</h2><p>C++ 智能指针定义在 <code>&lt;memory&gt;</code> 头文件中，用于自动管理动态分配的对象，避免手动 <code>new</code>/<code>delete</code> 带来的内存泄漏、重复释放或悬垂指针问题。它们遵循 RAII（资源获取即初始化）原则，在智能指针对象销毁时自动释放所管理的资源。</p>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-智能指针概述">1. 智能指针概述</a></li><li class="article-toc-h2"><a href="#2-三种智能指针的区别">2. 三种智能指针的区别</a></li><li class="article-toc-h2"><a href="#3-基础示例">3. 基础示例</a><ul><li class="article-toc-h3"><a href="#3-1-std-unique_ptr-示例-独占所有权">3.1 `std::unique_ptr` 示例（独占所有权）</a></li><li class="article-toc-h3"><a href="#3-2-std-shared_ptr-示例-共享所有权">3.2 `std::shared_ptr` 示例（共享所有权）</a></li><li class="article-toc-h3"><a href="#3-3-std-weak_ptr-示例-弱引用-打破循环引用">3.3 `std::weak_ptr` 示例（弱引用，打破循环引用）</a></li></ul></li><li class="article-toc-h2"><a href="#4-std-unique_ptr-详细使用场景">4. `std::unique_ptr` 详细使用场景</a><ul><li class="article-toc-h3"><a href="#4-1-工厂函数返回动态对象">4.1 工厂函数返回动态对象</a></li><li class="article-toc-h3"><a href="#4-2-作为类的成员变量-表达独占包含关系-如链表节点">4.2 作为类的成员变量，表达独占包含关系（如链表节点）</a></li><li class="article-toc-h3"><a href="#4-3-在多态容器中存储派生类对象">4.3 在多态容器中存储派生类对象</a></li><li class="article-toc-h3"><a href="#4-4-实现-pimpl-惯用法-隐藏实现细节">4.4 实现 PImpl 惯用法（隐藏实现细节）</a></li><li class="article-toc-h3"><a href="#4-5-自定义删除器处理特殊资源-如文件句柄">4.5 自定义删除器处理特殊资源（如文件句柄）</a></li><li class="article-toc-h3"><a href="#4-6-作为函数参数传递所有权">4.6 作为函数参数传递所有权</a></li></ul></li><li class="article-toc-h2"><a href="#5-总结">5. 总结</a></li></ul>
+          </details>
+
+          <div class="article-body"><h1 id="c-智能指针完全指南">C++智能指针完全指南</h1><h2 id="1-智能指针概述">1. 智能指针概述</h2><p>C++ 智能指针定义在 <code>&lt;memory&gt;</code> 头文件中，用于自动管理动态分配的对象，避免手动 <code>new</code>/<code>delete</code> 带来的内存泄漏、重复释放或悬垂指针问题。它们遵循 RAII（资源获取即初始化）原则，在智能指针对象销毁时自动释放所管理的资源。</p>
 <p>三种主要的智能指针：<code>std::unique_ptr</code>、<code>std::shared_ptr</code>、<code>std::weak_ptr</code>。</p>
 <h2 id="2-三种智能指针的区别">2. 三种智能指针的区别</h2><table>
 <thead>
@@ -353,59 +357,45 @@ int main() {
 </ul>
 <p>凡是以前需要 <code>new</code>/<code>delete</code> 且对象仅被一处拥有的地方，都可以用 <code>unique_ptr</code> 替代。通过合理使用智能指针，可以极大提高 C++ 代码的安全性和可维护性。</p>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#1-智能指针概述">1. 智能指针概述</a></li><li class="article-toc-h2"><a href="#2-三种智能指针的区别">2. 三种智能指针的区别</a></li><li class="article-toc-h2"><a href="#3-基础示例">3. 基础示例</a><ul><li class="article-toc-h3"><a href="#3-1-std-unique_ptr-示例-独占所有权">3.1 `std::unique_ptr` 示例（独占所有权）</a></li><li class="article-toc-h3"><a href="#3-2-std-shared_ptr-示例-共享所有权">3.2 `std::shared_ptr` 示例（共享所有权）</a></li><li class="article-toc-h3"><a href="#3-3-std-weak_ptr-示例-弱引用-打破循环引用">3.3 `std::weak_ptr` 示例（弱引用，打破循环引用）</a></li></ul></li><li class="article-toc-h2"><a href="#4-std-unique_ptr-详细使用场景">4. `std::unique_ptr` 详细使用场景</a><ul><li class="article-toc-h3"><a href="#4-1-工厂函数返回动态对象">4.1 工厂函数返回动态对象</a></li><li class="article-toc-h3"><a href="#4-2-作为类的成员变量-表达独占包含关系-如链表节点">4.2 作为类的成员变量，表达独占包含关系（如链表节点）</a></li><li class="article-toc-h3"><a href="#4-3-在多态容器中存储派生类对象">4.3 在多态容器中存储派生类对象</a></li><li class="article-toc-h3"><a href="#4-4-实现-pimpl-惯用法-隐藏实现细节">4.4 实现 PImpl 惯用法（隐藏实现细节）</a></li><li class="article-toc-h3"><a href="#4-5-自定义删除器处理特殊资源-如文件句柄">4.5 自定义删除器处理特殊资源（如文件句柄）</a></li><li class="article-toc-h3"><a href="#4-6-作为函数参数传递所有权">4.6 作为函数参数传递所有权</a></li></ul></li><li class="article-toc-h2"><a href="#5-总结">5. 总结</a></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

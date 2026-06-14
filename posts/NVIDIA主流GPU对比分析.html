@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NVIDIA GPU对比分析 | TechBlog</title>
-    <meta name="description" content="全面对比RTX 4090、H100、A100等主流GPU，从算力、带宽、价格等维度分析各卡定位与选购建议。">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVIDIA GPU对比分析 | TechBlog</title>
+  <meta name="description" content="全面对比RTX 4090、H100、A100等主流GPU，从算力、带宽、价格等维度分析各卡定位与选购建议。">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">NVIDIA GPU对比分析</h1>
+            <div class="article-meta">
+              <span>{2026-03-22}</span>
+              <span><span class="category-badge">GPU</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-主流显卡排行榜与核心参数">一、主流显卡排行榜与核心参数</a></li><li class="article-toc-h2"><a href="#二-产品差异与定位解析">二、产品差异与定位解析</a><ul><li class="article-toc-h3"><a href="#1-数据中心旗舰-b200-h200">1. 数据中心旗舰（B200, H200）</a></li><li class="article-toc-h3"><a href="#2-数据中心主力-h100-a100">2. 数据中心主力（H100, A100）</a></li><li class="article-toc-h3"><a href="#3-专业工作站-rtx-pro-6000-l40s">3. 专业工作站（RTX Pro 6000, L40S）</a></li><li class="article-toc-h3"><a href="#4-消费级-入门级-rtx-5090-l4">4. 消费级/入门级（RTX 5090, L4）</a></li></ul></li><li class="article-toc-h2"><a href="#三-hbm-与-gddr-显存技术对比">三、HBM 与 GDDR 显存技术对比</a><ul><li class="article-toc-h3"><a href="#3-1-核心设计理念">3.1 核心设计理念</a></li><li class="article-toc-h3"><a href="#3-2-优势对比">3.2 优势对比</a></li><li class="article-toc-h3"><a href="#3-3-为什么-nvidia-这样划分">3.3 为什么 NVIDIA 这样划分？</a></li></ul></li><li class="article-toc-h2"><a href="#四-采购与部署建议">四、采购与部署建议</a><ul><li class="article-toc-h3"><a href="#4-1-采购-vs-租赁">4.1 采购 vs. 租赁</a></li><li class="article-toc-h3"><a href="#4-2-场景选择参考">4.2 场景选择参考</a></li></ul></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">NVIDIA GPU对比分析</h1>
-                        <div class="article-meta">
-                            <span>{2026-03-22}</span>
-                            <span>GPU</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h1 id="nvidia-ai-训练与推理显卡完全指南">NVIDIA AI 训练与推理显卡完全指南</h1><h2 id="一-主流显卡排行榜与核心参数">一、主流显卡排行榜与核心参数</h2><table>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-主流显卡排行榜与核心参数">一、主流显卡排行榜与核心参数</a></li><li class="article-toc-h2"><a href="#二-产品差异与定位解析">二、产品差异与定位解析</a><ul><li class="article-toc-h3"><a href="#1-数据中心旗舰-b200-h200">1. 数据中心旗舰（B200, H200）</a></li><li class="article-toc-h3"><a href="#2-数据中心主力-h100-a100">2. 数据中心主力（H100, A100）</a></li><li class="article-toc-h3"><a href="#3-专业工作站-rtx-pro-6000-l40s">3. 专业工作站（RTX Pro 6000, L40S）</a></li><li class="article-toc-h3"><a href="#4-消费级-入门级-rtx-5090-l4">4. 消费级/入门级（RTX 5090, L4）</a></li></ul></li><li class="article-toc-h2"><a href="#三-hbm-与-gddr-显存技术对比">三、HBM 与 GDDR 显存技术对比</a><ul><li class="article-toc-h3"><a href="#3-1-核心设计理念">3.1 核心设计理念</a></li><li class="article-toc-h3"><a href="#3-2-优势对比">3.2 优势对比</a></li><li class="article-toc-h3"><a href="#3-3-为什么-nvidia-这样划分">3.3 为什么 NVIDIA 这样划分？</a></li></ul></li><li class="article-toc-h2"><a href="#四-采购与部署建议">四、采购与部署建议</a><ul><li class="article-toc-h3"><a href="#4-1-采购-vs-租赁">4.1 采购 vs. 租赁</a></li><li class="article-toc-h3"><a href="#4-2-场景选择参考">4.2 场景选择参考</a></li></ul></li></ul>
+          </details>
+
+          <div class="article-body"><h1 id="nvidia-ai-训练与推理显卡完全指南">NVIDIA AI 训练与推理显卡完全指南</h1><h2 id="一-主流显卡排行榜与核心参数">一、主流显卡排行榜与核心参数</h2><table>
 <thead>
 <tr>
 <th align="left"><strong>GPU型号</strong></th>
@@ -270,59 +274,45 @@
 <hr>
 <p><em>本文档基于公开信息整理，实际规格与价格请以 NVIDIA 官方发布为准。</em></p>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#一-主流显卡排行榜与核心参数">一、主流显卡排行榜与核心参数</a></li><li class="article-toc-h2"><a href="#二-产品差异与定位解析">二、产品差异与定位解析</a><ul><li class="article-toc-h3"><a href="#1-数据中心旗舰-b200-h200">1. 数据中心旗舰（B200, H200）</a></li><li class="article-toc-h3"><a href="#2-数据中心主力-h100-a100">2. 数据中心主力（H100, A100）</a></li><li class="article-toc-h3"><a href="#3-专业工作站-rtx-pro-6000-l40s">3. 专业工作站（RTX Pro 6000, L40S）</a></li><li class="article-toc-h3"><a href="#4-消费级-入门级-rtx-5090-l4">4. 消费级/入门级（RTX 5090, L4）</a></li></ul></li><li class="article-toc-h2"><a href="#三-hbm-与-gddr-显存技术对比">三、HBM 与 GDDR 显存技术对比</a><ul><li class="article-toc-h3"><a href="#3-1-核心设计理念">3.1 核心设计理念</a></li><li class="article-toc-h3"><a href="#3-2-优势对比">3.2 优势对比</a></li><li class="article-toc-h3"><a href="#3-3-为什么-nvidia-这样划分">3.3 为什么 NVIDIA 这样划分？</a></li></ul></li><li class="article-toc-h2"><a href="#四-采购与部署建议">四、采购与部署建议</a><ul><li class="article-toc-h3"><a href="#4-1-采购-vs-租赁">4.1 采购 vs. 租赁</a></li><li class="article-toc-h3"><a href="#4-2-场景选择参考">4.2 场景选择参考</a></li></ul></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

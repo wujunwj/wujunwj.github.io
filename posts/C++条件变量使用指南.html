@@ -1,73 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C++条件变量使用指南 | TechBlog</title>
-    <meta name="description" content="C++条件变量使用指南">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    <script>
-        (function() {
-            const saved = localStorage.getItem('theme');
-            if (saved) document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++条件变量使用指南 | TechBlog</title>
+  <meta name="description" content="C++条件变量使用指南">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    (function() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 </head>
 <body>
-    <header class="header">
-        <div class="header-brand">
-            <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
-            <nav class="header-nav">
-                <a href="/">首页</a>
-                <a href="/categories/c.html">C++</a>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><span class="logo-icon">T</span>TechBlog</a>
+      <nav class="header-nav">
+        <a href="/">首页</a>
+        <a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
 <a href="/categories/linux.html">Linux</a>
-            </nav>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        </div>
-    </header>
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">专栏</div>
-                <ul class="sidebar-nav">
-                    <a href="/categories/c.html">C++</a>
+      </nav>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="菜单">☰</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">专栏</div>
+      <ul class="sidebar-nav"><a href="/categories/c.html">C++</a>
 <a href="/categories/gpu.html">GPU</a>
 <a href="/categories/ohos.html">ohos</a>
 <a href="/categories/工具.html">工具</a>
 <a href="/categories/显示基础.html">显示基础</a>
-<a href="/categories/linux.html">Linux</a>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <div class="sidebar-title">最近文章</div>
-                <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
+<a href="/categories/linux.html">Linux</a></ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">最近文章</div>
+      <ul class="sidebar-nav"><li><a href="/posts/C++ 多线程同步：互斥锁与原子变量入门.html">C++ 多线程同步：互斥锁与原子变量入门</a></li>
 <li><a href="/posts/C++智能指针完全指南.html">C++智能指针完全指南</a></li>
 <li><a href="/posts/C++条件变量使用指南.html">C++条件变量使用指南</a></li>
 <li><a href="/posts/IOVA 详解：与 malloc:new 申请内存的区别.html">IOVA 详解：与 malloc/new 申请内存的区别</a></li>
 <li><a href="/posts/GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event.html">GPU 渲染中的同步机制详解：Fence、Semaphore、Barrier 与 Event</a></li></ul>
+    </div>
+  </aside>
+
+  <div class="layout">
+    <main class="main">
+      <div class="post-layout">
+        <article class="post-content">
+          <div class="article-header">
+            <h1 class="article-title">C++条件变量使用指南</h1>
+            <div class="article-meta">
+              <span>{2026-04-19}</span>
+              <span><span class="category-badge">C++</span></span>
             </div>
-        </aside>
-        <main class="main">
-            <div class="content post-layout">
-                <div class="article-toc">
-                    <div class="article-toc-title">目录</div>
-                    <ul class="article-toc-list"><li class="article-toc-h2"><a href="#主要使用场景分类">主要使用场景分类</a><ul><li class="article-toc-h3"><a href="#1-等待-通知模式-wait-notify">1. 等待-通知模式（Wait-Notify）</a></li><li class="article-toc-h3"><a href="#2-生产者-消费者模式">2. 生产者-消费者模式</a></li><li class="article-toc-h3"><a href="#3-等待超时模式">3. 等待超时模式</a></li><li class="article-toc-h3"><a href="#4-多线程屏障-集合点模式">4. 多线程屏障/集合点模式</a></li><li class="article-toc-h3"><a href="#5-读写锁模式-读多写少场景">5. 读写锁模式（读多写少场景）</a></li></ul></li><li class="article-toc-h2"><a href="#重要注意事项">重要注意事项</a></li></ul>
-                </div>
-                <article class="post-content">
-                    <div class="article-header">
-                        <h1 class="article-title">C++条件变量使用指南</h1>
-                        <div class="article-meta">
-                            <span>{2026-04-19}</span>
-                            <span>C++</span>
-                        </div>
-                    </div>
-                    <div class="article-body"><h1 id="c-条件变量使用指南">C++条件变量使用指南</h1><p>条件变量（condition variable）是C++多线程编程中用于线程同步的重要工具，允许线程在特定条件成立前等待，直到其他线程通知条件变化。</p>
+          </div>
+
+          <details class="mobile-toc">
+            <summary>📑 目录</summary>
+            <ul class="article-toc-list"><li class="article-toc-h2"><a href="#主要使用场景分类">主要使用场景分类</a><ul><li class="article-toc-h3"><a href="#1-等待-通知模式-wait-notify">1. 等待-通知模式（Wait-Notify）</a></li><li class="article-toc-h3"><a href="#2-生产者-消费者模式">2. 生产者-消费者模式</a></li><li class="article-toc-h3"><a href="#3-等待超时模式">3. 等待超时模式</a></li><li class="article-toc-h3"><a href="#4-多线程屏障-集合点模式">4. 多线程屏障/集合点模式</a></li><li class="article-toc-h3"><a href="#5-读写锁模式-读多写少场景">5. 读写锁模式（读多写少场景）</a></li></ul></li><li class="article-toc-h2"><a href="#重要注意事项">重要注意事项</a></li></ul>
+          </details>
+
+          <div class="article-body"><h1 id="c-条件变量使用指南">C++条件变量使用指南</h1><p>条件变量（condition variable）是C++多线程编程中用于线程同步的重要工具，允许线程在特定条件成立前等待，直到其他线程通知条件变化。</p>
 <h2 id="主要使用场景分类">主要使用场景分类</h2><h3 id="1-等待-通知模式-wait-notify">1. 等待-通知模式（Wait-Notify）</h3><p><strong>场景</strong>：一个线程等待某个条件成立，另一个线程在条件满足时通知等待的线程。</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;thread&gt;
@@ -434,59 +438,45 @@ while (!condition) {
 </ol>
 <p>这些示例覆盖了条件变量的主要使用场景，可以根据具体需求进行调整和扩展。</p>
 </div>
-                    <div class="article-footer">
-                        <a href="/" class="back-link">← 返回首页</a>
-                    </div>
-                </article>
-            </div>
-        </main>
-    </div>
-    <footer class="footer">
-        <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
-    </footer>
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = '🌙';
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = '☀️';
-            }
-        }
-        const saved = localStorage.getItem('theme');
-        document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
 
-        function slugify(text) {
-            return text.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-        }
-        
-        var idCounter = {};
-        const headings = document.querySelectorAll('.article-body h2, .article-body h3');
-        const tocLinks = document.querySelectorAll('.article-toc-list a');
-        
-        function updateActiveHeading() {
-            let current = '';
-            headings.forEach(heading => {
-                const rect = heading.getBoundingClientRect();
-                if (rect.top <= 120) {
-                    current = heading.id;
-                }
-            });
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        window.addEventListener('scroll', updateActiveHeading);
-        updateActiveHeading();
-    </script>
+          <div class="article-footer">
+            <a href="/" class="back-link">← 返回首页</a>
+          </div>
+        </article>
+
+        <nav class="article-toc" id="articleToc">
+          <div class="article-toc-title">目录</div>
+          <ul class="article-toc-list"><li class="article-toc-h2"><a href="#主要使用场景分类">主要使用场景分类</a><ul><li class="article-toc-h3"><a href="#1-等待-通知模式-wait-notify">1. 等待-通知模式（Wait-Notify）</a></li><li class="article-toc-h3"><a href="#2-生产者-消费者模式">2. 生产者-消费者模式</a></li><li class="article-toc-h3"><a href="#3-等待超时模式">3. 等待超时模式</a></li><li class="article-toc-h3"><a href="#4-多线程屏障-集合点模式">4. 多线程屏障/集合点模式</a></li><li class="article-toc-h3"><a href="#5-读写锁模式-读多写少场景">5. 读写锁模式（读多写少场景）</a></li></ul></li><li class="article-toc-h2"><a href="#重要注意事项">重要注意事项</a></li></ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2024 TechBlog. Powered by Markdown.</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btn.textContent = '🌙';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btn.textContent = '☀️';
+      }
+    }
+    const saved = localStorage.getItem('theme');
+    document.getElementById('themeBtn').textContent = saved === 'light' ? '🌙' : '☀️';
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+  </script>
 </body>
 </html>
